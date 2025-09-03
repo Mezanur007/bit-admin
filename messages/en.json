@@ -1,0 +1,85 @@
+{
+  "layout": {
+    "articles": "Articles",
+    "contacts": "Contacts",
+    "admins": "Admins",
+    "content": "Content",
+    "home": "Home",
+    "contact":"Contact",
+    "about":"About Us",
+    "settings": "Settings",
+    "profile": "Profile",
+    "password": "Password",
+    "email": "Email",
+    "signOut": "Sign Out"
+  },
+  "articlesPage": {
+    "pageTitle": "Articles",
+    "add": "Add Artile",
+    "noArticles": "No articles yet"
+  },
+  "addArticlePage": {
+    "pageTitle": "Add Article",
+    "image": "Article Image",
+    "title": "Title",
+    "description": "Description"
+  },
+  "editArticlePage": {
+    "pageTitle": "Edit Article"
+  },
+  "profilePage": {
+    "pageTitle": "Profile",
+    "edit": "Edit Profile",
+    "name": "Name",
+    "email": "Email"
+  },
+  "editProfilePage": {
+    "pageTitle": "Edit Profile",
+    "name": "Name",
+    "save": "Save Changes",
+    "saving": "Saving",
+    "success": "Changes saved successfully",
+    "noChanges": "No changes detected"
+  },
+  "changePasswordPage": {
+    "pageTitle": "Change Password",
+    "description": "A password reset link will be sent to the email",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter email",
+    "sendButton": "Send",
+    "successMessage": "Password reset link has been sent to {email}"
+  },
+  "changeEmailPage": {
+    "pageTitle": "Change Email",
+    "description": "A verification link will be sent to your new email",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter new email",
+    "sendButton": "Send",
+    "successMessage": "Email verification link has been sent to {email}"
+  },
+  "common": {
+    "langSelect": "Select Content Language",
+    "add": "Add",
+    "adding": "Adding",
+    "change": "Change",
+    "update": "Update",
+    "updating": "Updating",
+    "noUnderscores": "Underscores are not allowed in the title.",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "englishTitle": "English Title",
+    "arabicTitle": "Arabic Title",
+    "english": "English",
+    "arabic": "Arabic",
+    "confirmDelete": "Are you sure you want to delete this?",
+    "saveSuccess": "Saved successfully",
+    "updateSuccess": "Updated successfully",
+    "updateFail": "Failed to update",
+    "deleteSuccess": "Deleted successfully",
+    "deleteFail": "Failed to delete",
+    "cancel": "Cancel",
+    "addImage": "Please add an image."
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "layout": {
+    "articles": "مقالات",
+    "contacts": "جهات الاتصال",
+    "admins": "المسؤولون",
+    "content": "المحتوى",
+    "home": "الرئيسية",
+    "contact": "اتصل بنا",
+    "about": "معلومات عنا",
+    "settings": "الإعدادات",
+    "profile": "الملف الشخصي",
+    "password": "كلمة المرور",
+    "email": "البريد الإلكتروني",
+    "signOut": "تسجيل الخروج"
+  },
+  "articlesPage": {
+    "pageTitle": "المقالات",
+    "add": "إضافة مقال",
+    "noArticles": "لا توجد مقالات بعد"
+  },
+  "addArticlePage": {
+    "pageTitle": "إضافة مقالة",
+    "image": "صورة المقالة",
+    "title": "العنوان",
+    "description": "وَصْف"
+  },
+  "editArticlePage": {
+    "pageTitle": "تعديل المقالة"
+  },
+  "profilePage": {
+    "pageTitle": "الملف الشخصي",
+    "edit": "تعديل الملف الشخصي",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني"
+  },
+  "editProfilePage": {
+    "pageTitle": "تعديل الملف الشخصي",
+    "name": "الاسم",
+    "save": "حفظ التغييرات",
+    "saving": "جاري الحفظ",
+    "success": "تم حفظ التغييرات بنجاح",
+    "noChanges": "لم يتم اكتشاف أي تغييرات"
+  },
+  "changePasswordPage": {
+    "pageTitle": "تغيير كلمة المرور",
+    "description": "سيتم إرسال رابط إعادة تعيين كلمة المرور إلى البريد الإلكتروني",
+    "emailLabel": "البريد الإلكتروني",
+    "emailPlaceholder": "أدخل البريد الإلكتروني",
+    "sendButton": "إرسال",
+    "successMessage": "تم إرسال رابط إعادة تعيين كلمة المرور إلى {email}"
+  },
+  "changeEmailPage": {
+    "pageTitle": "تغيير البريد الإلكتروني",
+    "description": "سيتم إرسال رابط التحقق إلى بريدك الإلكتروني الجديد",
+    "emailLabel": "البريد الإلكتروني",
+    "emailPlaceholder": "أدخل البريد الإلكتروني الجديد",
+    "sendButton": "إرسال",
+    "successMessage": "تم إرسال رابط التحقق إلى {email}"
+  },
+  "common": {
+    "langSelect": "اختر لغة المحتوى",
+    "add": "إضافة",
+    "adding": "جارٍ الإضافة",
+    "change": "تغيير",
+    "update": "تحديث",
+    "updating": "جاري التحديث",
+    "noUnderscores": "الشرطة السفلية غير مسموح بها في العنوان.",
+    "view": "عرض",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "save": "حفظ",
+    "englishTitle": "العنوان بالإنجليزية",
+    "arabicTitle": "العنوان بالعربية",
+    "english": "الإنجليزية",
+    "arabic": "العربية",
+    "confirmDelete": "هل أنت متأكد أنك تريد الحذف؟",
+    "saveSuccess": "تم الحفظ بنجاح",
+    "updateSuccess": "تم التحديث بنجاح",
+    "updateFail": "فشل التحديث",
+    "deleteSuccess": "تم الحذف بنجاح",
+    "deleteFail": "فشل الحذف",
+    "cancel": "إلغاء",
+    "addImage": "الرجاء إضافة صورة."
+  }
+}

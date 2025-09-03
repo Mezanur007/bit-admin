@@ -1,0 +1,52 @@
+[dir="rtl"] .menuIcon {
+    transform: rotate(180deg);
+}
+
+.account-nav-item {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 15px 20px 15px 20px;
+    color: rgb(0, 0, 0, 0.65);
+    transition: all 0.3sec ease;
+}
+
+.active-route {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.sign-out:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.account-child-container {
+    flex-grow: 1;
+    min-height: calc(100vh - 88px);
+    overflow-y: auto;
+}
+
+@media (min-width: 992px) {
+    [dir="ltr"] .account-child-container {
+        max-width: calc(100% - 270px);
+        margin-left: 270px;
+        margin-right: 0;
+    }
+
+    [dir="rtl"] .account-child-container {
+        max-width: calc(100% - 270px);
+        margin-right: 270px;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 991px) {
+    .account-child-container {
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
