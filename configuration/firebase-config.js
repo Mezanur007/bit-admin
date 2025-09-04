@@ -5,12 +5,12 @@ import { getStorage } from "firebase/storage";
 import { getFunctions } from "firebase/functions";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCqxqIx4Omb6ctL0l0863hnIi3oIMg3QEA",
-  authDomain: "happy-face-5c0f0.firebaseapp.com",
-  projectId: "happy-face-5c0f0",
-  storageBucket: "happy-face-5c0f0.firebasestorage.app",
-  messagingSenderId: "132299043247",
-  appId: "1:132299043247:web:2bb97b48728d3086a6bf5a",
+  apiKey: "AIzaSyAaLjWAdlT-GSSpnOxskgwL9NBHGxa5qTU",
+  authDomain: "b-it-admin.firebaseapp.com",
+  projectId: "b-it-admin",
+  storageBucket: "b-it-admin.firebasestorage.app",
+  messagingSenderId: "687677788059",
+  appId: "1:687677788059:web:349f7ab38721bfb41bdb3e",
 };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();

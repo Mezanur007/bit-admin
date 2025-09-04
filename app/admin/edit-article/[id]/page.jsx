@@ -6,7 +6,7 @@ const JoditEditor = dynamic(() => import("jodit-react"), {
   ssr: false,
   loading: () => <p>Loading editor...</p>,
 });
-//import { db } from "@/configuration/firebase-config";
+import { db } from "@/configuration/firebase-config";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useRouter, useParams } from "next/navigation";
@@ -86,31 +86,20 @@ export default function EditArticle() {
     try {
       setLoading(true);
 
-      let storageId = article.storageId;
       let imageUrl = article.image;
 
       if (newImage) {
-        await fetch("/api/delete", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ path: `articles/${storageId}` }),
-        });
-
-        storageId = nanoid();
         const formData = new FormData();
         formData.append("file", newImage);
-        formData.append("path", `articles/${storageId}`);
+        formData.append("path", article.storageId);
+        formData.append("bucket", "bit-blog-images");
 
-        const res = await fetch("/api/upload", {
+        const res = await fetch("/api/image", {
           method: "POST",
           body: formData,
         });
 
-        if (!res.ok) {
-          const errData = await res.json();
-          console.error("Upload API error:", errData);
-          throw new Error(errData.error || "Image upload failed");
-        }
+        if (!res.ok) throw new Error("Image upload failed");
 
         const data = await res.json();
         imageUrl = data.url;
@@ -121,7 +110,6 @@ export default function EditArticle() {
         ...article,
         image: imageUrl,
         timestamp: serverTimestamp(),
-        storageId,
       });
 
       toast.success(c("updateSuccess"));
@@ -246,7 +234,7 @@ export default function EditArticle() {
             <>
               <span
                 className={`spinner-border spinner-border-sm ${
-                  lang === "en" ? "me-2" : "ms-2"
+                  locale === "en" ? "me-2" : "ms-2"
                 }`}
                 role="status"
                 aria-hidden="true"

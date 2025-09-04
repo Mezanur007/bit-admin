@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useArticles } from "@/contexts/ArticlesContext";
 import { deleteDoc, doc } from "firebase/firestore";
-//import { db } from "@/configuration/firebase-config";
+import { db } from "@/configuration/firebase-config";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Pagination from "@mui/material/Pagination";
@@ -17,6 +17,7 @@ export default function Articles() {
   const router = useRouter();
   const t = useTranslations("articlesPage");
   const c = useTranslations("common");
+  const [deletingIds, setDeletingIds] = useState([]);
 
   const {
     totalPages,
@@ -31,20 +32,29 @@ export default function Articles() {
 
   const handleDelete = async (article) => {
     if (!window.confirm(c("confirmDelete"))) return;
-
+    setDeletingIds((prev) => [...prev, article.id]);
     try {
-      //  await fetch("/api/delete", {
-      //    method: "POST",
-      //    headers: { "Content-Type": "application/json" },
-      //    body: JSON.stringify({ path: `articles/${article.storageId}` }),
-      //  });
+      const resImg = await fetch(`/api/image`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          bucket: "bit-blog-images",
+          path: article.storageId,
+        }),
+      });
 
-      //  await deleteDoc(doc(db, "articles", article.id));
+      if (!resImg.ok) throw new Error("Failed to delete image");
+
+      await deleteDoc(doc(db, "articles", article.id));
 
       toast.success(c("deleteSuccess"));
     } catch (error) {
       console.error("Failed to delete article:", error);
       toast.error(c("deletedFail"));
+    } finally {
+      setDeletingIds((prev) => prev.filter((id) => id !== article.id));
     }
   };
 
@@ -82,11 +92,29 @@ export default function Articles() {
               return (
                 <div className="col" key={article.id}>
                   <div className="card h-100 shadow-sm rounded-3 overflow-hidden">
-                    <img
-                      src={article.image}
+                    <div
+                      style={{
+                        position: "relative",
+                        width: "100%",
+                        paddingTop: "56.25%",
+                        backgroundColor: "#f0f0f0",
+                        overflow: "hidden",
+                      }}
                       className="card-img-top"
-                      alt={article.title[locale]}
-                    />
+                    >
+                      <img
+                        src={article.image}
+                        alt={article.title[locale]}
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          width: "100%",
+                          height: "100%",
+                        }}
+                        loading="lazy"
+                      />
+                    </div>
                     <div className="card-body d-flex flex-column">
                       <div
                         className="mb-3 clamp-3 fw-semibold flex-grow-1"
@@ -95,7 +123,12 @@ export default function Articles() {
                         {article.title[locale]}
                       </div>
                       <div className="d-flex">
-                        <div
+                        <a
+                          href={`https://b-it.co/en/article/${encodeURIComponent(
+                            article.title.en
+                          )}`}
+                          rel="noopener noreferrer"
+                          target="_blank"
                           className={`btn btn-primary ${
                             locale === "en" ? "me-2" : "ms-2"
                           }`}
@@ -110,7 +143,7 @@ export default function Articles() {
                           title={c("view")}
                         >
                           <FaEye />
-                        </div>
+                        </a>
                         <div
                           className={`btn btn-warning text-white ${
                             locale === "en" ? "me-2" : "ms-2"
@@ -127,8 +160,20 @@ export default function Articles() {
                           style={{ backgroundColor: "red" }}
                           onClick={() => handleDelete(article)}
                           title={c("delete")}
+                          disabled={deletingIds.includes(article.id)}
                         >
-                          <FaTrash />
+                          {deletingIds.includes(article.id) ? (
+                            <div
+                              className="spinner-border spinner-border-sm text-light"
+                              role="status"
+                            >
+                              <span className="visually-hidden">
+                                Loading...
+                              </span>
+                            </div>
+                          ) : (
+                            <FaTrash />
+                          )}
                         </div>
                       </div>
                     </div>

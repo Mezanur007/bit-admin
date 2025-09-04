@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useMemo, use } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import dynamic from "next/dynamic";
 const JoditEditor = dynamic(() => import("jodit-react"), {
   ssr: false,
@@ -10,9 +10,11 @@ import { db } from "@/configuration/firebase-config";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
 export default function AddArticle() {
   const locale = useLocale();
+  const router = useRouter();
   const t = useTranslations("addArticlePage");
   const c = useTranslations("common");
   const [activeLang, setActiveLang] = useState(locale || "en");
@@ -84,9 +86,10 @@ export default function AddArticle() {
 
       const formData = new FormData();
       formData.append("file", article.image);
-      formData.append("path", `articles/${storageId}`);
+      formData.append("path", storageId);
+      formData.append("bucket", "bit-blog-images");
 
-      const res = await fetch("/api/upload", {
+      const res = await fetch("/api/image", {
         method: "POST",
         body: formData,
       });
@@ -105,7 +108,7 @@ export default function AddArticle() {
       });
 
       toast.success(c("saveSuccess"));
-
+      router.back();
       setArticle({
         image: null,
         title: { en: "", ar: "" },
