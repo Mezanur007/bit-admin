@@ -125,7 +125,7 @@ export default function Articles() {
                       <div className="d-flex">
                         <a
                           href={`https://b-it.co/en/article/${encodeURIComponent(
-                            article.title.en
+                            article.slug
                           )}`}
                           rel="noopener noreferrer"
                           target="_blank"

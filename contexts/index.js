@@ -2,11 +2,14 @@
 
 import { MessagesProvider } from "./MessagesContext";
 import { ArticlesProvider } from "./ArticlesContext";
+import { ContentProvider } from "./ContentContext";
 
 export const AppProviders = ({ children }) => {
   return (
-    <MessagesProvider>
-      <ArticlesProvider>{children}</ArticlesProvider>
-    </MessagesProvider>
+    <ContentProvider>
+      <MessagesProvider>
+        <ArticlesProvider>{children}</ArticlesProvider>
+      </MessagesProvider>
+    </ContentProvider>
   );
 };

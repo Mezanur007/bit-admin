@@ -12,7 +12,7 @@ import ArrowDropDownSharpIcon from "@mui/icons-material/ArrowDropDownSharp";
 import ArrowDropUpSharpIcon from "@mui/icons-material/ArrowDropUpSharp";
 import MenuOpenRoundedIcon from "@mui/icons-material/MenuOpenRounded";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
-import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
+import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import { DescriptionOutlined } from "@mui/icons-material";
 
@@ -57,9 +57,9 @@ export default function AdminAccount({ children }) {
       icon: <ArticleOutlinedIcon />,
     },
     {
-      key: "contacts",
-      url: "/admin/contacts",
-      icon: <ContactsOutlinedIcon />,
+      key: "messages",
+      url: "/admin/messages",
+      icon: <MessageOutlinedIcon />,
       badgeKey: "unreadMessages",
     },
     {
@@ -139,6 +139,7 @@ export default function AdminAccount({ children }) {
                 top: "76.84px",
                 bottom: 0,
                 overflowY: "auto",
+                width: "260px",
               }}
             >
               {navItems.map(({ key, url, icon, badgeKey }) => {
@@ -186,14 +187,10 @@ export default function AdminAccount({ children }) {
                 className={`${styles["account-nav-item"]} mb-1 mb-xl-2 cursor-pointer`}
                 onClick={toggleContentDropdown}
               >
-                <DescriptionOutlined />
-                <h5
-                  className={`m-0 ${locale === "en" ? "ms-3" : "me-3"} ${
-                    locale === "en" ? "me-5" : "ms-5"
-                  }`}
-                >
-                  {t("content")}
-                </h5>
+                <DescriptionOutlined
+                  className={locale === "en" ? "me-3" : "ms-3"}
+                />
+                <h5 className="m-0 w-100">{t("content")}</h5>
                 {showContentDropdown === false ? (
                   <ArrowDropDownSharpIcon />
                 ) : (
@@ -211,14 +208,14 @@ export default function AdminAccount({ children }) {
                         className={`${
                           styles["account-nav-item"]
                         } mb-1 mb-xl-2 ${
-                          pathName === `/admin/home`
+                          pathName === `/admin/content/partners`
                             ? styles["active-route"]
                             : ""
                         }`}
-                        href={`/admin/home`}
+                        href={`/admin/content/partners`}
                         style={{ fontWeight: "500" }}
                       >
-                        {t("home")}
+                        {t("partners")}
                       </Link>
                     </div>
                     <div
@@ -229,32 +226,14 @@ export default function AdminAccount({ children }) {
                         className={`${
                           styles["account-nav-item"]
                         } mb-1 mb-xl-2 ${
-                          pathName === `/admin/contact`
+                          pathName === `/admin/content/faq`
                             ? styles["active-route"]
                             : ""
                         }`}
-                        href={`/admin/contact`}
+                        href={`/admin/content/faq`}
                         style={{ fontWeight: "500" }}
                       >
-                        {t("contact")}
-                      </Link>
-                    </div>
-                    <div
-                      data-bs-dismiss="offcanvas"
-                      data-bs-target="#offcanvasMenu"
-                    >
-                      <Link
-                        className={`${
-                          styles["account-nav-item"]
-                        } mb-1 mb-xl-2 ${
-                          pathName === `/admin/about`
-                            ? styles["active-route"]
-                            : ""
-                        }`}
-                        href={`/admin/about`}
-                        style={{ fontWeight: "500" }}
-                      >
-                        {t("about")}
+                        {t("faq")}
                       </Link>
                     </div>
                   </div>
@@ -264,14 +243,10 @@ export default function AdminAccount({ children }) {
                 className={`${styles["account-nav-item"]} mb-1 mb-xl-2 cursor-pointer`}
                 onClick={toggleSettingDropdown}
               >
-                <SettingsOutlinedIcon />
-                <h5
-                  className={`m-0 ${locale === "en" ? "ms-3" : "me-3"} ${
-                    locale === "en" ? "me-5" : "ms-5"
-                  }`}
-                >
-                  {t("settings")}
-                </h5>
+                <SettingsOutlinedIcon
+                  className={locale === "en" ? "me-3" : "ms-3"}
+                />
+                <h5 className="m-0 w-100">{t("settings")}</h5>
                 {showSettingDropdown === false ? (
                   <ArrowDropDownSharpIcon />
                 ) : (
