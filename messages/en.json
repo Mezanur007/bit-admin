@@ -5,8 +5,8 @@
     "admins": "Admins",
     "content": "Content",
     "home": "Home",
-    "contact":"Contact",
-    "about":"About Us",
+    "contact": "Contact",
+    "about": "About Us",
     "settings": "Settings",
     "profile": "Profile",
     "password": "Password",
@@ -64,7 +64,7 @@
     "change": "Change",
     "update": "Update",
     "updating": "Updating",
-    "noUnderscores": "Underscores are not allowed in the title.",
+    "noHyphens": "Hyphens are not allowed in the slug.",
     "view": "View",
     "edit": "Edit",
     "delete": "Delete",
@@ -80,6 +80,7 @@
     "deleteSuccess": "Deleted successfully",
     "deleteFail": "Failed to delete",
     "cancel": "Cancel",
-    "addImage": "Please add an image."
+    "addImage": "Please add an image.",
+    "slug": "Slug"
   }
 }

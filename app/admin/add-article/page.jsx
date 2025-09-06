@@ -21,6 +21,7 @@ export default function AddArticle() {
   const [article, setArticle] = useState({
     image: null,
     title: { en: "", ar: "" },
+    slug: "",
     description: { en: "", ar: "" },
   });
   const [loading, setLoading] = useState(false);
@@ -39,8 +40,8 @@ export default function AddArticle() {
   );
 
   const handleChange = (field, value) => {
-    if (field === "title" && value.includes("_")) {
-      setError(c("noUnderscores"));
+    if (field === "slug" && value.includes("-")) {
+      setError(c("noHyphens"));
       return;
     } else {
       setError("");
@@ -112,6 +113,7 @@ export default function AddArticle() {
       setArticle({
         image: null,
         title: { en: "", ar: "" },
+        slug: "",
         description: { en: "", ar: "" },
       });
     } catch (error) {
@@ -190,6 +192,19 @@ export default function AddArticle() {
             onChange={(e) => handleChange("title", e.target.value)}
             required
             dir={activeLang === "ar" ? "rtl" : "ltr"}
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="articleSlug" className="form-label">
+            {c("slug")}
+          </label>
+          <input
+            id="articleSlug"
+            type="text"
+            className="form-control"
+            value={article.slug}
+            onChange={(e) => handleChange("slug", e.target.value)}
+            required
           />
           {error !== "" && <div className="form-text text-danger">{error}</div>}
         </div>

@@ -42,9 +42,9 @@ export default function EditArticle() {
   );
 
   const handleChange = (field, value) => {
-    if (field === "title") {
-      if (value.includes("_")) {
-        setError(c("noUnderscores"));
+    if (field === "slug") {
+      if (value.includes("-")) {
+        setError(c("noHyphens"));
         return;
       } else {
         setError("");
@@ -210,7 +210,20 @@ export default function EditArticle() {
             required
             dir={activeLang === "ar" ? "rtl" : "ltr"}
           />
-          {error && <div className="form-text text-danger">{error}</div>}
+        </div>
+        <div className="mb-4">
+          <label htmlFor="articleSlug" className="form-label">
+            {c("slug")}
+          </label>
+          <input
+            id="articleSlug"
+            type="text"
+            className="form-control"
+            value={article.slug || ""}
+            onChange={(e) => handleChange("slug", e.target.value)}
+            required
+          />
+          {error !== "" && <div className="form-text text-danger">{error}</div>}
         </div>
         <div className="mb-5">
           <label className="form-label">{a("description")}</label>
