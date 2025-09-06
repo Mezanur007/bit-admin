@@ -69,6 +69,21 @@ export default function AdminAccount({ children }) {
     },
   ];
 
+  const contentSubPages = [
+    {
+      key: "partners",
+      url: "/admin/content/partners",
+    },
+    {
+      key: "faq",
+      url: "/admin/content/faq",
+    },
+    {
+      key: "terms",
+      url: "/admin/content/terms",
+    },
+  ];
+
   //  useEffect(() => {
   //    if (!loading && (!user || !isAdmin)) {
   //      router.push(`/login`);
@@ -199,43 +214,31 @@ export default function AdminAccount({ children }) {
               </div>
               <div>
                 {showContentDropdown && (
-                  <div style={{ paddingLeft: "40px" }}>
-                    <div
-                      data-bs-dismiss="offcanvas"
-                      data-bs-target="#offcanvasMenu"
-                    >
-                      <Link
-                        className={`${
-                          styles["account-nav-item"]
-                        } mb-1 mb-xl-2 ${
-                          pathName === `/admin/content/partners`
-                            ? styles["active-route"]
-                            : ""
-                        }`}
-                        href={`/admin/content/partners`}
-                        style={{ fontWeight: "500" }}
+                  <div
+                    style={{
+                      paddingLeft: locale === "en" ? "40px" : "",
+                      paddingRight: locale === "ar" ? "40px" : "",
+                    }}
+                  >
+                    {contentSubPages.map(({ key, url }) => (
+                      <div
+                        key={key}
+                        data-bs-dismiss="offcanvas"
+                        data-bs-target="#offcanvasMenu"
                       >
-                        {t("partners")}
-                      </Link>
-                    </div>
-                    <div
-                      data-bs-dismiss="offcanvas"
-                      data-bs-target="#offcanvasMenu"
-                    >
-                      <Link
-                        className={`${
-                          styles["account-nav-item"]
-                        } mb-1 mb-xl-2 ${
-                          pathName === `/admin/content/faq`
-                            ? styles["active-route"]
-                            : ""
-                        }`}
-                        href={`/admin/content/faq`}
-                        style={{ fontWeight: "500" }}
-                      >
-                        {t("faq")}
-                      </Link>
-                    </div>
+                        <Link
+                          className={`${
+                            styles["account-nav-item"]
+                          } mb-1 mb-xl-2 ${
+                            pathName === url ? styles["active-route"] : ""
+                          }`}
+                          href={url}
+                          style={{ fontWeight: "500" }}
+                        >
+                          {t(key)}
+                        </Link>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -255,7 +258,12 @@ export default function AdminAccount({ children }) {
               </div>
               <div>
                 {showSettingDropdown && (
-                  <div style={{ paddingLeft: "40px" }}>
+                  <div
+                    style={{
+                      paddingLeft: locale === "en" ? "40px" : "",
+                      paddingRight: locale === "ar" ? "40px" : "",
+                    }}
+                  >
                     <div
                       data-bs-dismiss="offcanvas"
                       data-bs-target="#offcanvasMenu"
