@@ -43,7 +43,7 @@ export default function TrustedPartners() {
       let partnerId = editingPartner ? editingPartner.id : nanoid();
       let logoURL = editingPartner?.logo || "";
 
-      const path = `content/${partnerId}`;
+      const path = `content/partners/${partnerId}`;
       if (file) {
         const formData = new FormData();
         formData.append("file", file);

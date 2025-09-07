@@ -80,7 +80,15 @@ export default function AdminAccount({ children }) {
     },
     {
       key: "terms",
-      url: "/admin/content/terms",
+      url: "/admin/content/terms-and-conditions",
+    },
+    {
+      key: "privacy",
+      url: "/admin/content/privacy-policy",
+    },
+    {
+      key: "about",
+      url: "/admin/content/about-us",
     },
   ];
 

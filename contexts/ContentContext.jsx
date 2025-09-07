@@ -13,8 +13,48 @@ export const ContentProvider = ({ children }) => {
   const [partnersLoading, setPartnersLoading] = useState(true);
   const [faq, setFaq] = useState([]);
   const [faqLoading, setFaqLoading] = useState(true);
-  const [terms, setTerms] = useState({});
-  const [termsLoading, setTermsLoading] = useState(true);
+  const [terms, setTerms] = useState({
+    en: { headline: "", copy: "", content: "" },
+    ar: { headline: "", copy: "", content: "" },
+  });
+  const [privacy, setPrivacy] = useState({
+    en: { headline: "", copy: "", content: "" },
+    ar: { headline: "", copy: "", content: "" },
+  });
+  const [about, setAbout] = useState({
+    hero: { headline: { en: "", ar: "" }, copy: { en: "", ar: "" } },
+    missionVisionSection: {
+      title: { en: "", ar: "" },
+      headline: { en: "", ar: "" },
+      copy: { en: "", ar: "" },
+      mission: {
+        headline: { en: "", ar: "" },
+        copy: { en: "", ar: "" },
+        image: { url: "", path: "" },
+      },
+      vision: {
+        headline: { en: "", ar: "" },
+        copy: { en: "", ar: "" },
+        image: { url: "", path: "" },
+      },
+    },
+    features: [],
+    howWeWorkSection: {
+      headline: { en: "", ar: "" },
+      copy: { en: "", ar: "" },
+    },
+    howWeWorkSteps: [],
+    cta: {
+      copy: { en: "", ar: "" },
+      buttonText: { en: "", ar: "" },
+    },
+    coreValuesSection: {
+      title: { en: "", ar: "" },
+      headline: { en: "", ar: "" },
+      copy: { en: "", ar: "" },
+    },
+    coreValuesItems: [],
+  });
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -76,11 +116,51 @@ export const ContentProvider = ({ children }) => {
           const data = snapshot.data();
           setTerms(data);
         }
-        setTermsLoading(false);
       },
       (error) => {
         console.error("Error fetching terms:", error);
-        setTermsLoading(false);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    const docRef = doc(db, "content", "privacy");
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          setPrivacy(data);
+        }
+      },
+      (error) => {
+        console.error("Error fetching privacy:", error);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    const docRef = doc(db, "content", "about");
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          setAbout(data);
+        }
+      },
+      (error) => {
+        console.error("Error fetching about page content:", error);
       }
     );
 
@@ -98,7 +178,8 @@ export const ContentProvider = ({ children }) => {
         faq,
         faqLoading,
         terms,
-        termsLoading,
+        privacy,
+        about,
       }}
     >
       {children}

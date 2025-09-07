@@ -6,7 +6,9 @@
     "content": "Content",
     "partners": "Partners",
     "faq": "Faq",
-    "terms":"Terms",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "about": "About Us",
     "settings": "Settings",
     "profile": "Profile",
     "password": "Password",
@@ -37,7 +39,6 @@
     "pageTitle": "Edit Profile",
     "name": "Name",
     "save": "Save Changes",
-    "saving": "Saving",
     "success": "Changes saved successfully",
     "noChanges": "No changes detected"
   },
@@ -97,7 +98,28 @@
     "error": "An error occurred"
   },
   "terms": {
-    "pageTitle": "Terms and Conditions"
+    "pageTitle": "Terms and Conditions",
+    "headline": "Headline",
+    "copy": "Copy",
+    "content": "Content"
+  },
+  "aboutPage": {
+    "pageTitle": "About Us",
+    "saveSuccess": "Saved successfully!",
+    "error": "Something went wrong",
+    "hero": "Hero",
+    "mvSection": "Mission & Vision Section",
+    "mission": "Mission",
+    "vision": "Vision",
+    "features": "Features",
+    "remove": "Remove",
+    "addFeature": "Add Feature",
+    "howWeWorkSection": "How We Work Section",
+    "addStep": "Add Step",
+    "cta": "CTA",
+    "coreValuesSection": "Core Values Section",
+    "addCoreValue": "Add Core Value",
+    "image":"Image"
   },
   "common": {
     "langSelect": "Select Content Language",
@@ -111,6 +133,7 @@
     "edit": "Edit",
     "delete": "Delete",
     "save": "Save",
+    "saving":"Saving",
     "englishTitle": "English Title",
     "arabicTitle": "Arabic Title",
     "english": "English",

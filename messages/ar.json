@@ -7,6 +7,8 @@
     "partners": "الشركاء",
     "faq": "الأسئلة الشائعة",
     "terms": "الشروط",
+    "privacy": "الخصوصية",
+    "about": "من نحن",
     "settings": "الإعدادات",
     "profile": "الملف الشخصي",
     "password": "كلمة المرور",
@@ -37,7 +39,6 @@
     "pageTitle": "تعديل الملف الشخصي",
     "name": "الاسم",
     "save": "حفظ التغييرات",
-    "saving": "جاري الحفظ",
     "success": "تم حفظ التغييرات بنجاح",
     "noChanges": "لم يتم اكتشاف أي تغييرات"
   },
@@ -97,7 +98,28 @@
     "error": "حدث خطأ"
   },
   "terms": {
-    "pageTitle": "الشروط والأحكام"
+    "pageTitle": "الشروط والأحكام",
+    "headline": "العنوان",
+    "copy": "النص",
+    "content": "المحتوى"
+  },
+  "aboutPage": {
+    "pageTitle": "من نحن",
+    "saveSuccess": "تم الحفظ بنجاح!",
+    "error": "حدث خطأ ما",
+    "hero": "القسم الرئيسي",
+    "mvSection": "قسم الرسالة والرؤية",
+    "mission": "الرسالة",
+    "vision": "الرؤية",
+    "features": "المميزات",
+    "remove": "إزالة",
+    "addFeature": "إضافة ميزة",
+    "howWeWorkSection": "قسم طريقة عملنا",
+    "addStep": "إضافة خطوة",
+    "cta": "دعوة للإجراء",
+    "coreValuesSection": "قسم القيم الأساسية",
+    "addCoreValue": "إضافة قيمة أساسية",
+    "image": "صورة"
   },
   "common": {
     "langSelect": "اختر لغة المحتوى",
@@ -111,6 +133,7 @@
     "edit": "تعديل",
     "delete": "حذف",
     "save": "حفظ",
+    "saving": "جارٍ الحفظ",
     "englishTitle": "العنوان بالإنجليزية",
     "arabicTitle": "العنوان بالعربية",
     "english": "الإنجليزية",

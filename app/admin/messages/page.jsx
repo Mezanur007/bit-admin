@@ -253,7 +253,7 @@ export default function MessagesPage() {
                       {message.message}
                     </td>
                     <td>
-                      {new Date(message.timestamp).toLocaleString("en-US", {
+                      {message.timestamp?.toDate().toLocaleString("en-US", {
                         year: "numeric",
                         month: "short",
                         day: "numeric",

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { db } from "@/configuration/firebase-config";
-import { doc, updateDoc, onSnapshot } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { nanoid } from "nanoid";
 import { IoMdClose } from "react-icons/io";
 import { useContent } from "@/contexts/ContentContext";
@@ -16,8 +16,8 @@ export default function Faq() {
   const [showModal, setShowModal] = useState(false);
   const [editingFaq, setEditingFaq] = useState(null);
   const [formData, setFormData] = useState({
-    question: "",
-    answer: "",
+    question: { en: "", ar: "" },
+    answer: { en: "", ar: "" },
     id: null,
   });
   const [saving, setSaving] = useState(false);
@@ -35,7 +35,11 @@ export default function Faq() {
       });
     } else {
       setEditingFaq(null);
-      setFormData({ question: "", answer: "", id: null });
+      setFormData({
+        question: { en: "", ar: "" },
+        answer: { en: "", ar: "" },
+        id: null,
+      });
     }
     setShowModal(true);
   };
@@ -69,7 +73,7 @@ export default function Faq() {
     try {
       const updatedFaq = faq.filter((f) => f.id !== faqItem.id);
       await updateDoc(faqDocRef, { faq: updatedFaq });
-      toast.success("c(deleteSuccess)");
+      toast.success(c("deleteSuccess"));
     } catch (err) {
       console.error(err);
       toast.error(t("error"));
@@ -117,9 +121,9 @@ export default function Faq() {
               <div className="d-flex justify-content-between align-items-start">
                 <div>
                   <h6 className="fw-bold">
-                    {index + 1}. {item.question}
+                    {index + 1}. {item.question[locale]}
                   </h6>
-                  <p>{item.answer}</p>
+                  <p>{item.answer[locale]}</p>
                 </div>
                 <div className="d-flex gap-2">
                   <button
@@ -176,23 +180,64 @@ export default function Faq() {
                     <label className="form-label">{t("question")}</label>
                     <input
                       type="text"
-                      className="form-control"
-                      value={formData.question}
+                      className="form-control mb-2"
+                      placeholder="English"
+                      value={formData.question.en}
                       required
                       onChange={(e) =>
-                        setFormData({ ...formData, question: e.target.value })
+                        setFormData({
+                          ...formData,
+                          question: {
+                            ...formData.question,
+                            en: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Arabic"
+                      value={formData.question.ar}
+                      required
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          question: {
+                            ...formData.question,
+                            ar: e.target.value,
+                          },
+                        })
                       }
                     />
                   </div>
+
                   <div className="mb-3">
                     <label className="form-label">{t("answer")}</label>
                     <textarea
-                      className="form-control"
-                      rows={4}
-                      value={formData.answer}
+                      className="form-control mb-2"
+                      rows={2}
+                      placeholder="English"
+                      value={formData.answer.en}
                       required
                       onChange={(e) =>
-                        setFormData({ ...formData, answer: e.target.value })
+                        setFormData({
+                          ...formData,
+                          answer: { ...formData.answer, en: e.target.value },
+                        })
+                      }
+                    ></textarea>
+                    <textarea
+                      className="form-control"
+                      rows={2}
+                      placeholder="Arabic"
+                      value={formData.answer.ar}
+                      required
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          answer: { ...formData.answer, ar: e.target.value },
+                        })
                       }
                     ></textarea>
                   </div>
