@@ -71,6 +71,10 @@ export default function AdminAccount({ children }) {
 
   const contentSubPages = [
     {
+      key: "contactInfo",
+      url: "/admin/content/contact-info",
+    },
+    {
       key: "partners",
       url: "/admin/content/partners",
     },
@@ -89,6 +93,10 @@ export default function AdminAccount({ children }) {
     {
       key: "about",
       url: "/admin/content/about-us",
+    },
+    {
+      key: "contact",
+      url: "/admin/content/contact-us",
     },
   ];
 

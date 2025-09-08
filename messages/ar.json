@@ -4,11 +4,13 @@
     "messages": "الرسائل",
     "admins": "المسؤولون",
     "content": "المحتوى",
+    "contactInfo": "معلومات الاتصال",
     "partners": "الشركاء",
     "faq": "الأسئلة الشائعة",
     "terms": "الشروط",
     "privacy": "الخصوصية",
     "about": "من نحن",
+    "contact": "Contact Us",
     "settings": "الإعدادات",
     "profile": "الملف الشخصي",
     "password": "كلمة المرور",
@@ -120,6 +122,23 @@
     "coreValuesSection": "قسم القيم الأساسية",
     "addCoreValue": "إضافة قيمة أساسية",
     "image": "صورة"
+  },
+  "contactUs": {
+    "pageTitle": "اتصل بنا",
+    "heroHeadline": "عنوان البطل",
+    "heroCopy": "نص البطل",
+    "contactHeadline": "عنوان قسم الاتصال",
+    "contactCopy": "نص قسم الاتصال",
+    "ctaHeadline": "عنوان الدعوة إلى الإجراء",
+    "ctaCopy": "نص الدعوة إلى الإجراء",
+    "ctaButton": "نص زر الدعوة إلى الإجراء"
+  },
+  "contactInfo": {
+    "pageTitle": "Contact Info",
+    "phone": "Phone 1",
+    "phone1": "Phone 2",
+    "email": "Email",
+    "address": "Address"
   },
   "common": {
     "langSelect": "اختر لغة المحتوى",

@@ -4,11 +4,13 @@
     "messages": "Messages",
     "admins": "Admins",
     "content": "Content",
+    "contactInfo": "Contact Info",
     "partners": "Partners",
     "faq": "Faq",
     "terms": "Terms",
     "privacy": "Privacy",
     "about": "About Us",
+    "contact": "Contact Us",
     "settings": "Settings",
     "profile": "Profile",
     "password": "Password",
@@ -119,7 +121,24 @@
     "cta": "CTA",
     "coreValuesSection": "Core Values Section",
     "addCoreValue": "Add Core Value",
-    "image":"Image"
+    "image": "Image"
+  },
+  "contactUs": {
+    "pageTitle": "Contact Us",
+    "heroHeadline": "Hero Headline",
+    "heroCopy": "Hero Copy",
+    "contactHeadline": "Contact Section Headline",
+    "contactCopy": "Contact Section Copy",
+    "ctaHeadline": "CTA Headline",
+    "ctaCopy": "CTA Copy",
+    "ctaButton": "CTA Button Text"
+  },
+  "contactInfo": {
+    "pageTitle": "Contact Info",
+    "phone": "Phone 1",
+    "phone1": "Phone 2",
+    "email": "Email",
+    "address": "Address"
   },
   "common": {
     "langSelect": "Select Content Language",
@@ -133,7 +152,7 @@
     "edit": "Edit",
     "delete": "Delete",
     "save": "Save",
-    "saving":"Saving",
+    "saving": "Saving",
     "englishTitle": "English Title",
     "arabicTitle": "Arabic Title",
     "english": "English",

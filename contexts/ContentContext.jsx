@@ -55,6 +55,21 @@ export const ContentProvider = ({ children }) => {
     },
     coreValuesItems: [],
   });
+  const [contactUs, setContactUs] = useState({
+    heroHeadline: { en: "", ar: "" },
+    heroCopy: { en: "", ar: "" },
+    contactHeadline: { en: "", ar: "" },
+    contactCopy: { en: "", ar: "" },
+    ctaHeadline: { en: "", ar: "" },
+    ctaCopy: { en: "", ar: "" },
+    ctaButton: { en: "", ar: "" },
+  });
+  const [contactInfo, setContactInfo] = useState({
+    phone: "",
+    phone1: "",
+    email: "",
+    address: { en: "", ar: "" },
+  });
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -169,6 +184,48 @@ export const ContentProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const docRef = doc(db, "content", "contactUs");
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          setContactUs(data);
+        }
+      },
+      (error) => {
+        console.error("Error fetching contact page content:", error);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    const docRef = doc(db, "content", "contactInfo");
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          setContactInfo(data);
+        }
+      },
+      (error) => {
+        console.error("Error fetching contact info:", error);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   return (
     <ContentContext.Provider
       value={{
@@ -180,6 +237,8 @@ export const ContentProvider = ({ children }) => {
         terms,
         privacy,
         about,
+        contactUs,
+        contactInfo,
       }}
     >
       {children}
