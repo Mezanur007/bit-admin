@@ -7,7 +7,7 @@ import { auth } from "@/configuration/firebase-config";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import useAuth from "@/hooks/UseAuth";
+//import useAuth from "@/hooks/UseAuth";
 import { FiLogIn } from "react-icons/fi";
 import { GoLock } from "react-icons/go";
 import { LuAtSign } from "react-icons/lu";
@@ -18,7 +18,7 @@ import Loading from "@/components/Loading";
 
 export default function LoginPage({ params }) {
   const { lang } = use(params);
-  const { user, isAdmin, loading: authLoading } = useAuth();
+  //  const { user, isAdmin, loading: authLoading } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -62,40 +62,42 @@ export default function LoginPage({ params }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    signInWithEmailAndPassword(auth, userData.email, userData.password)
-      .then(async (userCredentials) => {
-        const user = userCredentials.user;
-        await user.getIdTokenResult().then(async (idTokenResult) => {
-          const claims = idTokenResult.claims;
-          if (claims.isAdmin) {
-            router.push(`/${lang}/admin/products`);
-          } else {
-            toast.error(t.notAdmin);
-            await signOut(auth);
-          }
-        });
-      })
-      .catch((error) => {
-        toast.error(error.message);
-        console.error("Error logging in:", error.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    //setLoading(true);
+    //signInWithEmailAndPassword(auth, userData.email, userData.password)
+    //  .then(async (userCredentials) => {
+    //    const user = userCredentials.user;
+    //    await user.getIdTokenResult().then(async (idTokenResult) => {
+    //      const claims = idTokenResult.claims;
+    //      if (claims.isAdmin) {
+    //        router.push(`/${lang}/admin/products`);
+    //      } else {
+    //        toast.error(t.notAdmin);
+    //        await signOut(auth);
+    //      }
+    //    });
+    //  })
+    //  .catch((error) => {
+    //    toast.error(error.message);
+    //    console.error("Error logging in:", error.message);
+    //  })
+    //  .finally(() => {
+    //    setLoading(false);
+    //  });
   };
 
-  useEffect(() => {
-    if (!authLoading && user && isAdmin) {
-      router.push(`/${lang}/admin/products`);
-    }
-  }, [authLoading, user, isAdmin]);
+  //  useEffect(() => {
+  //    if (!authLoading && user && isAdmin) {
+  //      router.push(`/${lang}/admin/products`);
+  //    }
+  //  }, [authLoading, user, isAdmin]);
 
-  if (authLoading) {
-    return <Loading />;
-  }
+  //  if (authLoading) {
+  //    return <Loading />;
+  //  }
 
-  return !user ? (
+  //  return !user ? (
+
+  return (
     <div
       className="d-flex align-items-center"
       style={{ minHeight: "calc(100vh - 88px)" }}
@@ -269,7 +271,9 @@ export default function LoginPage({ params }) {
         </div>
       </div>
     </div>
-  ) : (
-    <Loading />
   );
+
+  //  ) : (
+  //    <Loading />
+  //  );
 }
