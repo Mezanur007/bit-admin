@@ -11,6 +11,7 @@
     "privacy": "Privacy",
     "about": "About Us",
     "contact": "Contact Us",
+    "portfolio": "Portfolio",
     "settings": "Settings",
     "profile": "Profile",
     "password": "Password",
@@ -92,6 +93,7 @@
   "faq": {
     "pageTitle": "Frequently asked questions",
     "add": "Add faq",
+    "headline": "Headline",
     "editFaq": "Edit FAQ",
     "question": "Question",
     "answer": "Answer",
@@ -139,6 +141,9 @@
     "phone1": "Phone 2",
     "email": "Email",
     "address": "Address"
+  },
+  "portfolio": {
+    "pageTitle": "Portfolio"
   },
   "common": {
     "langSelect": "Select Content Language",

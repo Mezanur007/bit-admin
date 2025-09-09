@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { db } from "@/configuration/firebase-config";
 import { doc, updateDoc } from "firebase/firestore";
@@ -15,6 +15,7 @@ export default function Faq() {
   const { faq, faqLoading: loading } = useContent();
   const [showModal, setShowModal] = useState(false);
   const [editingFaq, setEditingFaq] = useState(null);
+  const [pageHeadline, setPageHeadline] = useState({ en: "", ar: "" });
   const [formData, setFormData] = useState({
     question: { en: "", ar: "" },
     answer: { en: "", ar: "" },
@@ -50,11 +51,11 @@ export default function Faq() {
       const id = editingFaq ? editingFaq.id : nanoid();
       const newFaq = { ...formData, id };
 
-      const updatedFaq = editingFaq
-        ? faq.map((f) => (f.id === id ? newFaq : f))
-        : [...faq, newFaq];
+      const updatedFaqs = editingFaq
+        ? faq.faqs.map((f) => (f.id === id ? newFaq : f))
+        : [...(faq.faqs || []), newFaq];
 
-      await updateDoc(faqDocRef, { faq: updatedFaq });
+      await updateDoc(faqDocRef, { faqs: updatedFaqs });
       setShowModal(false);
       toast.success(c("saveSuccess"));
     } catch (err) {
@@ -82,6 +83,10 @@ export default function Faq() {
     }
   };
 
+  useEffect(() => {
+    setPageHeadline(faq.headline);
+  }, [faq]);
+
   return (
     <div
       style={{
@@ -101,6 +106,55 @@ export default function Faq() {
           {t("add")}
         </div>
       </div>
+      <div
+        className="d-flex flex-column align-items-start mb-4"
+        style={{ maxWidth: "500px" }}
+      >
+        <label className="form-label">{t("headline")}</label>
+        <input
+          type="text"
+          className="form-control mb-3"
+          value={pageHeadline.en}
+          onChange={(e) =>
+            setPageHeadline({ ...pageHeadline, en: e.target.value })
+          }
+        />
+        <input
+          type="text"
+          className="form-control mb-3"
+          value={pageHeadline.ar}
+          onChange={(e) =>
+            setPageHeadline({ ...pageHeadline, ar: e.target.value })
+          }
+        />
+        <button
+          className="btn btn-primary"
+          onClick={async () => {
+            try {
+              setSaving(true);
+              await updateDoc(faqDocRef, { headline: pageHeadline });
+              toast.success(c("saveSuccess"));
+            } catch (err) {
+              console.error(err);
+              toast.error(t("error"));
+            } finally {
+              setSaving(false);
+            }
+          }}
+          disabled={saving}
+        >
+          {saving ? (
+            <div
+              className="spinner-border spinner-border-sm text-light"
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          ) : (
+            c("save")
+          )}
+        </button>
+      </div>
 
       {loading ? (
         <div className="d-flex justify-content-center align-items-center my-5">
@@ -108,17 +162,17 @@ export default function Faq() {
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
-      ) : faq.length === 0 ? (
+      ) : faq.faqs.length === 0 ? (
         <h5 className="text-center my-5">{t("noFaq")}</h5>
       ) : (
         <div className="d-flex flex-column gap-3">
-          {faq.map((item, index) => (
+          {faq.faqs.map((item, index) => (
             <div
               key={item.id}
               className="card p-3 shadow-sm"
               style={{ borderRadius: "12px", border: "1px solid #dee2e6" }}
             >
-              <div className="d-flex justify-content-between align-items-start">
+              <div className="d-flex flex-column justify-content-between align-items-start">
                 <div>
                   <h6 className="fw-bold">
                     {index + 1}. {item.question[locale]}

@@ -10,7 +10,8 @@
     "terms": "الشروط",
     "privacy": "الخصوصية",
     "about": "من نحن",
-    "contact": "Contact Us",
+    "contact": "اتصل بنا",
+    "portfolio": "أعمالنا",
     "settings": "الإعدادات",
     "profile": "الملف الشخصي",
     "password": "كلمة المرور",
@@ -92,6 +93,7 @@
   "faq": {
     "pageTitle": "الأسئلة المتكررة",
     "add": "إضافة سؤال",
+    "headline": "عنوان",
     "editFaq": "تعديل السؤال",
     "question": "السؤال",
     "answer": "الإجابة",
@@ -139,6 +141,9 @@
     "phone1": "Phone 2",
     "email": "Email",
     "address": "Address"
+  },
+  "portfolio": {
+    "pageTitle": "أعمالنا"
   },
   "common": {
     "langSelect": "اختر لغة المحتوى",

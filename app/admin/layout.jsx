@@ -98,6 +98,10 @@ export default function AdminAccount({ children }) {
       key: "contact",
       url: "/admin/content/contact-us",
     },
+    {
+      key: "portfolio",
+      url: "/admin/content/portfolio",
+    },
   ];
 
   //  useEffect(() => {

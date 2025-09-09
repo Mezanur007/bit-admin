@@ -11,7 +11,7 @@ export const useContent = () => useContext(ContentContext);
 export const ContentProvider = ({ children }) => {
   const [partners, setPartners] = useState([]);
   const [partnersLoading, setPartnersLoading] = useState(true);
-  const [faq, setFaq] = useState([]);
+  const [faq, setFaq] = useState({ headline: { en: "", ar: "" }, faqs: [] });
   const [faqLoading, setFaqLoading] = useState(true);
   const [terms, setTerms] = useState({
     en: { headline: "", copy: "", content: "" },
@@ -70,6 +70,7 @@ export const ContentProvider = ({ children }) => {
     email: "",
     address: { en: "", ar: "" },
   });
+  const [portfolio, setPortfolio] = useState({});
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -104,9 +105,7 @@ export const ContentProvider = ({ children }) => {
       (snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.data();
-          setFaq(data.faq || []);
-        } else {
-          setFaq([]);
+          setFaq({ faqs: data.faqs, headline: data.headline });
         }
         setFaqLoading(false);
       },
@@ -226,6 +225,27 @@ export const ContentProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const docRef = doc(db, "content", "potfolio");
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          setPortfolio(data);
+        }
+      },
+      (error) => {
+        console.error("Error fetching portfolio page content:", error);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   return (
     <ContentContext.Provider
       value={{
@@ -239,6 +259,7 @@ export const ContentProvider = ({ children }) => {
         about,
         contactUs,
         contactInfo,
+        portfolio,
       }}
     >
       {children}
