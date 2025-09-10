@@ -13,6 +13,7 @@
     "contact": "اتصل بنا",
     "portfolio": "أعمالنا",
     "technologies": "التقنيات",
+    "services": "الخدمات",
     "settings": "الإعدادات",
     "profile": "الملف الشخصي",
     "password": "كلمة المرور",
@@ -177,6 +178,20 @@
     "title": "العنوان",
     "headline": "العنوان",
     "copy": "النص"
+  },
+  "services": {
+    "pageTitle": "صفحة الخدمات",
+    "add": "إضافة خدمة",
+    "noServices": "لا توجد خدمات متاحة.",
+    "service": "خدمة",
+    "services": "خدمات",
+    "headline": "العنوان",
+    "copy": "النص",
+    "features": "Features",
+    "process": "العملية",
+    "addImage": "إضافة صورة",
+    "changeImage": "تغيير الصورة",
+    "benefits": "الفوائد"
   },
   "common": {
     "langSelect": "اختر لغة المحتوى",

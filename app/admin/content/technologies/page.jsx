@@ -140,42 +140,41 @@ export default function Technologies() {
       ) : techs.length === 0 ? (
         <h5 className="text-center my-5">{t("noTechnologies")}</h5>
       ) : (
-        <>
-          <ul className="list-group mb-4">
-            {techs.map((tech) => (
-              <li
-                key={tech.id}
-                className="list-group-item d-flex justify-content-between align-items-center"
-              >
-                {tech.title}
-                <div>
-                  <button
-                    className={`btn btn-sm btn-outline-primary ${
-                      locale === "ar" ? "ms-2" : "me-2"
-                    }`}
-                    onClick={() => handleShowModal(tech)}
-                  >
-                    {c("edit")}
-                  </button>
-                  <button
-                    className="btn btn-sm btn-outline-danger"
-                    onClick={() => handleDelete(tech.id)}
-                  >
-                    {c("delete")}
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <button
-            className="btn btn-success"
-            onClick={handleSaveToFirestore}
-            disabled={loading}
-          >
-            {loading ? c("saving") : c("save")}
-          </button>
-        </>
+        <ul className="list-group mb-4">
+          {techs.map((tech) => (
+            <li
+              key={tech.id}
+              className="list-group-item d-flex justify-content-between align-items-center"
+            >
+              {tech.title}
+              <div>
+                <button
+                  className={`btn btn-sm btn-outline-primary ${
+                    locale === "ar" ? "ms-2" : "me-2"
+                  }`}
+                  onClick={() => handleShowModal(tech)}
+                >
+                  {c("edit")}
+                </button>
+                <button
+                  className="btn btn-sm btn-outline-danger"
+                  onClick={() => handleDelete(tech.id)}
+                >
+                  {c("delete")}
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
+
+      <button
+        className="btn btn-success"
+        onClick={handleSaveToFirestore}
+        disabled={loading}
+      >
+        {loading ? c("saving") : c("save")}
+      </button>
 
       {/* Modal */}
       {modalOpen && (
@@ -208,6 +207,7 @@ export default function Technologies() {
                         }))
                       }
                       required
+                      dir="ltr"
                     />
                   </div>
                   <div className="d-flex">

@@ -92,6 +92,12 @@ export const ContentProvider = ({ children }) => {
     techs: [],
   });
   const [techLoading, setTechLoading] = useState(true);
+  const [serviceContent, setServiceContent] = useState({
+    headline: { en: "", ar: "" },
+    copy: { en: "", ar: "" },
+    services: [],
+  });
+  const [serviceLoading, setServiceLoading] = useState(false);
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -290,6 +296,29 @@ export const ContentProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const docRef = doc(db, "content", "services");
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          setServiceContent(data);
+        }
+        setServiceLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching services:", error);
+        setServiceLoading(false);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   return (
     <ContentContext.Provider
       value={{
@@ -306,6 +335,8 @@ export const ContentProvider = ({ children }) => {
         portfolio,
         techContent,
         techLoading,
+        serviceContent,
+        serviceLoading
       }}
     >
       {children}

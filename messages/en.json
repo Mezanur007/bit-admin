@@ -12,7 +12,8 @@
     "about": "About Us",
     "contact": "Contact Us",
     "portfolio": "Portfolio",
-    "technologies":"Technologies",
+    "technologies": "Technologies",
+    "services": "Services",
     "settings": "Settings",
     "profile": "Profile",
     "password": "Password",
@@ -168,15 +169,29 @@
     "selectImage": "Select Image",
     "saveAll": "Save All"
   },
-  "technologies":{
+  "technologies": {
     "pageTitle": "Technologies Page",
     "add": "Add Technology",
     "noTechnologies": "No technologies available.",
-    "technology":"Technology",
-    "technologies":"Technologies",
-    "title":"Title",
-    "headline":"Headline",
-    "copy":"Copy"
+    "technology": "Technology",
+    "technologies": "Technologies",
+    "title": "Title",
+    "headline": "Headline",
+    "copy": "Copy"
+  },
+  "services": {
+    "pageTitle": "Services Page",
+    "add": "Add Service",
+    "noServices": "No services available.",
+    "service": "Service",
+    "services": "Services",
+    "headline": "Headline",
+    "copy": "Copy",
+    "features": "Features",
+    "process": "Process",
+    "addImage": "add Image",
+    "changeImage": "change Image",
+    "benefits": "Benefits"
   },
   "common": {
     "langSelect": "Select Content Language",

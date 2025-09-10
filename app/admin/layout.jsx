@@ -106,6 +106,10 @@ export default function AdminAccount({ children }) {
       key: "portfolio",
       url: "/admin/content/portfolio",
     },
+    {
+      key: "services",
+      url: "/admin/content/services",
+    },
   ];
 
   //  useEffect(() => {
