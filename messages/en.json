@@ -143,7 +143,28 @@
     "address": "Address"
   },
   "portfolio": {
-    "pageTitle": "Portfolio"
+    "pageTitle": "Portfolio",
+    "hero": "Hero",
+    "categories": "Categories",
+    "projects": "Projects",
+    "howWeWork": "How We Work",
+    "cta": "CTA",
+    "headline": "Headline",
+    "copy": "Copy",
+    "button1": "Button 1",
+    "button2": "Button 2",
+    "title_en": "Title (English)",
+    "title_ar": "Title (Arabic)",
+    "link": "Link",
+    "selectCategory": "-- Select Category --",
+    "points": "Points",
+    "addPoint": "+ Add Point",
+    "addItem": "+ Add Item",
+    "addCategory": "+ Add Category",
+    "addProject": "+ Add Project",
+    "changeImage": "Change Image",
+    "selectImage": "Select Image",
+    "saveAll": "Save All"
   },
   "common": {
     "langSelect": "Select Content Language",

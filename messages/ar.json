@@ -143,7 +143,28 @@
     "address": "Address"
   },
   "portfolio": {
-    "pageTitle": "أعمالنا"
+    "pageTitle": "محفظة المشاريع",
+    "hero": "الواجهة الرئيسية",
+    "categories": "الفئات",
+    "projects": "المشاريع",
+    "howWeWork": "كيف نعمل",
+    "cta": "الدعوة للعمل",
+    "headline": "العنوان",
+    "copy": "الوصف",
+    "button1": "الزر 1",
+    "button2": "الزر 2",
+    "title_en": "العنوان (بالإنجليزية)",
+    "title_ar": "العنوان (بالعربية)",
+    "link": "الرابط",
+    "selectCategory": "-- اختر الفئة --",
+    "points": "النقاط",
+    "addPoint": "+ إضافة نقطة",
+    "addItem": "+ إضافة عنصر",
+    "addCategory": "+ إضافة فئة",
+    "addProject": "+ إضافة مشروع",
+    "changeImage": "تغيير الصورة",
+    "selectImage": "اختر صورة",
+    "saveAll": "حفظ الكل"
   },
   "common": {
     "langSelect": "اختر لغة المحتوى",

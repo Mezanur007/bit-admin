@@ -70,7 +70,22 @@ export const ContentProvider = ({ children }) => {
     email: "",
     address: { en: "", ar: "" },
   });
-  const [portfolio, setPortfolio] = useState({});
+  const [portfolio, setPortfolio] = useState({
+    hero: { headline: { en: "", ar: "" }, copy: { en: "", ar: "" } },
+    categories: [],
+    projects: [],
+    howWeWork: {
+      headline: { en: "", ar: "" },
+      copy: { en: "", ar: "" },
+      items: [],
+    },
+    cta: {
+      headline: { en: "", ar: "" },
+      copy: { en: "", ar: "" },
+      button1: { en: "", ar: "" },
+      button2: { en: "", ar: "" },
+    },
+  });
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -226,7 +241,7 @@ export const ContentProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const docRef = doc(db, "content", "potfolio");
+    const docRef = doc(db, "content", "portfolio");
 
     const unsubscribe = onSnapshot(
       docRef,
