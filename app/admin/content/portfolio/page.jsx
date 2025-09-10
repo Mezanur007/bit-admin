@@ -6,13 +6,14 @@ import { doc, updateDoc } from "firebase/firestore";
 import { useContent } from "@/contexts/ContentContext";
 import { toast } from "react-toastify";
 import { nanoid } from "nanoid";
+import { FaChevronUp, FaChevronDown } from "react-icons/fa6";
 
 export default function PortfolioPage() {
   const locale = useLocale();
   const t = useTranslations("portfolio");
   const c = useTranslations("common");
   const { portfolio } = useContent();
-
+  const [loading, setLoading] = useState(false);
   const [activeLang, setActiveLang] = useState(locale || "en");
   const [formData, setFormData] = useState({
     hero: { headline: { en: "", ar: "" }, copy: { en: "", ar: "" } },
@@ -29,6 +30,14 @@ export default function PortfolioPage() {
       button1: { en: "", ar: "" },
       button2: { en: "", ar: "" },
     },
+  });
+  const [deletedProjects, setDeletedProjects] = useState([]);
+  const [openSections, setOpenSections] = useState({
+    hero: false,
+    categories: false,
+    projects: false,
+    howWeWork: false,
+    cta: false,
   });
 
   const handleImageUpload = async (file, path) => {
@@ -101,6 +110,18 @@ export default function PortfolioPage() {
     }));
   };
 
+  const deleteProject = (id) => {
+    const projectToDelete = formData.projects.find((p) => p.id === id);
+    if (!projectToDelete) return;
+
+    setDeletedProjects((prev) => [...prev, projectToDelete]);
+
+    setFormData((prev) => ({
+      ...prev,
+      projects: prev.projects.filter((p) => p.id !== id),
+    }));
+  };
+
   const updateProject = (id, field, value, lang = activeLang) => {
     setFormData((prev) => ({
       ...prev,
@@ -155,6 +176,27 @@ export default function PortfolioPage() {
 
   const handleSave = async () => {
     try {
+      setLoading(true);
+
+      if (deletedProjects.length > 0) {
+        await Promise.all(
+          deletedProjects.map(async (p) => {
+            if (p.image?.path) {
+              const resImg = await fetch(`/api/image`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  bucket: "bit-content-images",
+                  path: p.image.path,
+                }),
+              });
+              if (!resImg.ok) throw new Error("Failed to delete image");
+            }
+          })
+        );
+        setDeletedProjects([]);
+      }
+
       const updatedProjects = await Promise.all(
         formData.projects.map(async (p) => {
           if (p.tempFile) {
@@ -175,7 +217,16 @@ export default function PortfolioPage() {
     } catch (err) {
       console.error(err);
       toast.error("Failed to save");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const toggleSection = (section) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
   };
 
   useEffect(() => {
@@ -203,267 +254,356 @@ export default function PortfolioPage() {
         </select>
       </div>
 
-      <div className="mb-4">
-        <h5>{t("hero")}</h5>
-        <input
-          className="form-control mb-2"
-          placeholder="Headline"
-          value={formData.hero.headline[activeLang]}
-          onChange={(e) => handleChange("hero", "headline", e.target.value)}
-          dir={activeLang === "ar" ? "rtl" : "ltr"}
-        />
-        <textarea
-          className="form-control"
-          placeholder="Copy"
-          value={formData.hero.copy[activeLang]}
-          onChange={(e) => handleChange("hero", "copy", e.target.value)}
-          dir={activeLang === "ar" ? "rtl" : "ltr"}
-        />
-      </div>
-
-      <div className="mb-4">
-        <h5>{t("categories")}</h5>
-        <ul className="list-group mb-2">
-          {formData.categories.map((cat) => (
-            <li key={cat.id} className="list-group-item">
-              <div className="mb-2">
-                <input
-                  className="form-control mb-1"
-                  dir="ltr"
-                  placeholder={t("title_en")}
-                  value={cat.title.en}
-                  onChange={(e) => updateCategory(cat.id, "en", e.target.value)}
-                />
-                <input
-                  className="form-control"
-                  dir="rtl"
-                  placeholder={t("title_ar")}
-                  value={cat.title.ar}
-                  onChange={(e) => updateCategory(cat.id, "ar", e.target.value)}
-                />
-              </div>
-              <button
-                className="btn btn-sm btn-danger"
-                onClick={() => removeCategory(cat.id)}
-              >
-                {c("delete")}
-              </button>
-            </li>
-          ))}
-        </ul>
-        <button className="btn btn-primary" onClick={addCategory}>
-          {t("addCategory")}
-        </button>
-      </div>
-
-      <div className="mb-4">
-        <h5>{t("projects")}</h5>
-        {formData.projects.map((p) => (
-          <div key={p.id} className="border p-3 mb-2 rounded">
+      <div className="mb-4 border rounded">
+        <div
+          className="d-flex justify-content-between align-items-center p-2"
+          style={{ cursor: "pointer", backgroundColor: "#f7f7f7" }}
+          onClick={() => toggleSection("hero")}
+        >
+          <h5 className="mb-0">{t("hero")}</h5>
+          {openSections.hero ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        {openSections.hero && (
+          <div className="p-3">
             <input
               className="form-control mb-2"
-              dir={activeLang === "ar" ? "rtl" : "ltr"}
               placeholder="Headline"
-              value={p.headline[activeLang]}
-              onChange={(e) => updateProject(p.id, "headline", e.target.value)}
+              value={formData.hero.headline[activeLang]}
+              onChange={(e) => handleChange("hero", "headline", e.target.value)}
+              dir={activeLang === "ar" ? "rtl" : "ltr"}
             />
             <textarea
-              className="form-control mb-2"
-              dir={activeLang === "ar" ? "rtl" : "ltr"}
+              className="form-control"
               placeholder="Copy"
-              value={p.copy[activeLang]}
-              onChange={(e) => updateProject(p.id, "copy", e.target.value)}
-            />
-            <input
-              type="text"
-              className="form-control mb-2"
+              value={formData.hero.copy[activeLang]}
+              onChange={(e) => handleChange("hero", "copy", e.target.value)}
               dir={activeLang === "ar" ? "rtl" : "ltr"}
-              placeholder="Link"
-              value={p.link}
-              onChange={(e) => updateProject(p.id, "link", e.target.value)}
             />
-
-            <select
-              className="form-select mb-2"
-              value={p.category}
-              onChange={(e) => updateProject(p.id, "category", e.target.value)}
-            >
-              <option value="">{t("selectCategory")}</option>
-              {formData.categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.title[activeLang]}
-                </option>
-              ))}
-            </select>
-
-            <input
-              type="file"
-              id={`file-${p.id}`}
-              style={{ display: "none" }}
-              onChange={(e) =>
-                updateProject(p.id, "tempFile", e.target.files[0])
-              }
-            />
-
-            <button
-              type="button"
-              className="btn btn-outline-primary"
-              onClick={() => document.getElementById(`file-${p.id}`).click()}
-            >
-              {p.tempFile || p.image?.url ? t("changeImage") : t("selectImage")}
-            </button>
-
-            {/* Preview */}
-            {(p.tempFile || p.image?.url) && (
-              <div className="mt-2">
-                <img
-                  src={
-                    p.tempFile ? URL.createObjectURL(p.tempFile) : p.image.url
-                  }
-                  alt="preview"
-                  style={{ width: "120px", borderRadius: "6px" }}
-                />
-              </div>
-            )}
           </div>
-        ))}
-
-        <button className="btn btn-primary mt-2" onClick={addProject}>
-          {t("addProject")}
-        </button>
+        )}
       </div>
 
-      <div className="mb-4">
-        <h5>{t("howWeWork")}</h5>
-        <input
-          className="form-control mb-2"
-          placeholder="Headline"
-          value={formData.howWeWork.headline[activeLang]}
-          onChange={(e) =>
-            handleChange("howWeWork", "headline", e.target.value)
-          }
-          dir={activeLang === "ar" ? "rtl" : "ltr"}
-        />
-        <textarea
-          className="form-control mb-2"
-          placeholder="Copy"
-          value={formData.howWeWork.copy[activeLang]}
-          onChange={(e) => handleChange("howWeWork", "copy", e.target.value)}
-          dir={activeLang === "ar" ? "rtl" : "ltr"}
-        />
+      <div className="mb-4 border rounded">
+        <div
+          className="d-flex justify-content-between align-items-center p-2"
+          style={{ cursor: "pointer", backgroundColor: "#f7f7f7" }}
+          onClick={() => toggleSection("categories")}
+        >
+          <h5 className="mb-0">{t("categories")}</h5>
+          {openSections.categories ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        {openSections.categories && (
+          <div className="p-3">
+            <ul className="list-group mb-2">
+              {formData.categories.map((cat) => (
+                <li key={cat.id} className="list-group-item">
+                  <div className="mb-2">
+                    <input
+                      className="form-control mb-1"
+                      dir="ltr"
+                      placeholder={t("title_en")}
+                      value={cat.title.en}
+                      onChange={(e) =>
+                        updateCategory(cat.id, "en", e.target.value)
+                      }
+                    />
+                    <input
+                      className="form-control"
+                      dir="rtl"
+                      placeholder={t("title_ar")}
+                      value={cat.title.ar}
+                      onChange={(e) =>
+                        updateCategory(cat.id, "ar", e.target.value)
+                      }
+                    />
+                  </div>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => removeCategory(cat.id)}
+                  >
+                    {c("delete")}
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <button className="btn btn-primary" onClick={addCategory}>
+              {t("addCategory")}
+            </button>
+          </div>
+        )}
+      </div>
 
-        {formData.howWeWork.items.map((i) => (
-          <div key={i.id} className="border p-3 mb-2 rounded">
-            <input
-              className="form-control mb-2"
-              dir={activeLang === "ar" ? "rtl" : "ltr"}
-              placeholder="Item Headline"
-              value={i.headline[activeLang]}
-              onChange={(e) =>
-                updateHowWeWorkItem(i.id, "headline", e.target.value)
-              }
-            />
-            <textarea
-              className="form-control mb-2"
-              dir={activeLang === "ar" ? "rtl" : "ltr"}
-              placeholder="Item Copy"
-              value={i.copy[activeLang]}
-              onChange={(e) =>
-                updateHowWeWorkItem(i.id, "copy", e.target.value)
-              }
-            />
-
-            <div className="mb-2">
-              <label className="fw-bold mb-2">{t("points")}</label>
-              {i.points.map((point, idx) => (
-                <div key={idx} className="d-flex align-items-center mb-2">
-                  <input
-                    className="form-control me-2"
-                    dir={activeLang === "ar" ? "rtl" : "ltr"}
-                    value={point[activeLang]}
-                    onChange={(e) => {
-                      const newPoints = [...i.points];
-                      newPoints[idx][activeLang] = e.target.value;
-                      updateHowWeWorkItem(i.id, "points", newPoints);
-                    }}
-                  />
+      <div className="mb-4 border rounded">
+        <div
+          className="d-flex justify-content-between align-items-center p-2"
+          style={{ cursor: "pointer", backgroundColor: "#f7f7f7" }}
+          onClick={() => toggleSection("projects")}
+        >
+          <h5 className="mb-0">{t("projects")}</h5>
+          {openSections.projects ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        {openSections.projects && (
+          <div className="p-3">
+            {formData.projects.map((p) => (
+              <div key={p.id} className="border p-3 mb-4 rounded">
+                <div className="d-flex justify-content-end mb-2">
                   <button
                     type="button"
-                    className="btn btn-sm btn-danger"
-                    onClick={() => {
-                      const newPoints = i.points.filter(
-                        (_, pIdx) => pIdx !== idx
-                      );
-                      updateHowWeWorkItem(i.id, "points", newPoints);
-                    }}
+                    className="btn btn-outline-danger"
+                    onClick={() => deleteProject(p.id)}
                   >
-                    ×
+                    {c("delete")}
                   </button>
                 </div>
-              ))}
+                <input
+                  className="form-control mb-2"
+                  dir={activeLang === "ar" ? "rtl" : "ltr"}
+                  placeholder="Headline"
+                  value={p.headline[activeLang]}
+                  onChange={(e) =>
+                    updateProject(p.id, "headline", e.target.value)
+                  }
+                />
+                <textarea
+                  className="form-control mb-2"
+                  dir={activeLang === "ar" ? "rtl" : "ltr"}
+                  placeholder="Copy"
+                  value={p.copy[activeLang]}
+                  onChange={(e) => updateProject(p.id, "copy", e.target.value)}
+                />
+                <input
+                  type="text"
+                  className="form-control mb-2"
+                  dir={activeLang === "ar" ? "rtl" : "ltr"}
+                  placeholder="Link"
+                  value={p.link}
+                  onChange={(e) => updateProject(p.id, "link", e.target.value)}
+                />
 
-              <button
-                type="button"
-                className="btn btn-sm btn-outline-primary d-block"
-                onClick={() =>
-                  updateHowWeWorkItem(i.id, "points", [
-                    ...i.points,
-                    { en: "", ar: "" },
-                  ])
-                }
-              >
-                {t("addPoint")}
-              </button>
-            </div>
+                <select
+                  className="form-select mb-2"
+                  value={p.category}
+                  onChange={(e) =>
+                    updateProject(p.id, "category", e.target.value)
+                  }
+                >
+                  <option value="">{t("selectCategory")}</option>
+                  {formData.categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.title[activeLang]}
+                    </option>
+                  ))}
+                </select>
+
+                <input
+                  type="file"
+                  id={`file-${p.id}`}
+                  style={{ display: "none" }}
+                  onChange={(e) =>
+                    updateProject(p.id, "tempFile", e.target.files[0])
+                  }
+                />
+
+                <button
+                  type="button"
+                  className="btn btn-outline-primary"
+                  onClick={() =>
+                    document.getElementById(`file-${p.id}`).click()
+                  }
+                >
+                  {p.tempFile || p.image?.url
+                    ? t("changeImage")
+                    : t("selectImage")}
+                </button>
+                {(p.tempFile || p.image?.url) && (
+                  <div className="mt-2">
+                    <img
+                      src={
+                        p.tempFile
+                          ? URL.createObjectURL(p.tempFile)
+                          : p.image.url
+                      }
+                      alt="preview"
+                      style={{ width: "120px", borderRadius: "6px" }}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+            <button className="btn btn-primary mt-2" onClick={addProject}>
+              {t("addProject")}
+            </button>
           </div>
-        ))}
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={addHowWeWorkItem}
+        )}
+      </div>
+
+      <div className="mb-4 border rounded">
+        <div
+          className="d-flex justify-content-between align-items-center p-2"
+          style={{ cursor: "pointer", backgroundColor: "#f7f7f7" }}
+          onClick={() => toggleSection("howWeWork")}
         >
-          {t("addItem")}
-        </button>
+          <h5 className="mb-0">{t("howWeWork")}</h5>
+          {openSections.howWeWork ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        {openSections.howWeWork && (
+          <div className="p-3">
+            <input
+              className="form-control mb-2"
+              placeholder="Headline"
+              value={formData.howWeWork.headline[activeLang]}
+              onChange={(e) =>
+                handleChange("howWeWork", "headline", e.target.value)
+              }
+              dir={activeLang === "ar" ? "rtl" : "ltr"}
+            />
+            <textarea
+              className="form-control mb-2"
+              placeholder="Copy"
+              value={formData.howWeWork.copy[activeLang]}
+              onChange={(e) =>
+                handleChange("howWeWork", "copy", e.target.value)
+              }
+              dir={activeLang === "ar" ? "rtl" : "ltr"}
+            />
+            <label className="fw-bold mb-2">{t("steps")}</label>
+            {formData.howWeWork.items.map((i) => (
+              <div key={i.id} className="border p-3 mb-2 rounded">
+                <input
+                  className="form-control mb-2"
+                  dir={activeLang === "ar" ? "rtl" : "ltr"}
+                  placeholder="Item Headline"
+                  value={i.headline[activeLang]}
+                  onChange={(e) =>
+                    updateHowWeWorkItem(i.id, "headline", e.target.value)
+                  }
+                />
+                <textarea
+                  className="form-control mb-2"
+                  dir={activeLang === "ar" ? "rtl" : "ltr"}
+                  placeholder="Item Copy"
+                  value={i.copy[activeLang]}
+                  onChange={(e) =>
+                    updateHowWeWorkItem(i.id, "copy", e.target.value)
+                  }
+                />
+                <div className="mb-2">
+                  <label className="fw-bold mb-2">{t("points")}</label>
+                  {i.points.map((point, idx) => (
+                    <div key={idx} className="d-flex align-items-center mb-2">
+                      <input
+                        className="form-control me-2"
+                        dir={activeLang === "ar" ? "rtl" : "ltr"}
+                        value={point[activeLang]}
+                        onChange={(e) => {
+                          const newPoints = [...i.points];
+                          newPoints[idx][activeLang] = e.target.value;
+                          updateHowWeWorkItem(i.id, "points", newPoints);
+                        }}
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-danger"
+                        onClick={() => {
+                          const newPoints = i.points.filter(
+                            (_, pIdx) => pIdx !== idx
+                          );
+                          updateHowWeWorkItem(i.id, "points", newPoints);
+                        }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-primary d-block"
+                    onClick={() =>
+                      updateHowWeWorkItem(i.id, "points", [
+                        ...i.points,
+                        { en: "", ar: "" },
+                      ])
+                    }
+                  >
+                    {t("addPoint")}
+                  </button>
+                </div>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={addHowWeWorkItem}
+            >
+              {t("addItem")}
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="mb-4">
-        <h5>{t("cta")}</h5>
-        <input
-          className="form-control mb-2"
-          placeholder="Headline"
-          value={formData.cta.headline[activeLang]}
-          onChange={(e) => handleChange("cta", "headline", e.target.value)}
-          dir={activeLang === "ar" ? "rtl" : "ltr"}
-        />
-        <textarea
-          className="form-control mb-2"
-          placeholder="Copy"
-          value={formData.cta.copy[activeLang]}
-          onChange={(e) => handleChange("cta", "copy", e.target.value)}
-          dir={activeLang === "ar" ? "rtl" : "ltr"}
-        />
-        <input
-          className="form-control mb-2"
-          placeholder="Button 1"
-          value={formData.cta.button1[activeLang]}
-          onChange={(e) => handleChange("cta", "button1", e.target.value)}
-          dir={activeLang === "ar" ? "rtl" : "ltr"}
-        />
-        <input
-          className="form-control"
-          placeholder="Button 2"
-          value={formData.cta.button2[activeLang]}
-          onChange={(e) => handleChange("cta", "button2", e.target.value)}
-          dir={activeLang === "ar" ? "rtl" : "ltr"}
-        />
+        <div
+          className="d-flex justify-content-between align-items-center p-2"
+          style={{ cursor: "pointer", backgroundColor: "#f7f7f7" }}
+          onClick={() => toggleSection("cta")}
+        >
+          <h5 className="mb-0">{t("cta")}</h5>
+          {openSections.cta ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+        {openSections.cta && (
+          <div className="p-3">
+            <input
+              className="form-control mb-2"
+              placeholder="Headline"
+              value={formData.cta.headline[activeLang]}
+              onChange={(e) => handleChange("cta", "headline", e.target.value)}
+              dir={activeLang === "ar" ? "rtl" : "ltr"}
+            />
+            <textarea
+              className="form-control mb-2"
+              placeholder="Copy"
+              value={formData.cta.copy[activeLang]}
+              onChange={(e) => handleChange("cta", "copy", e.target.value)}
+              dir={activeLang === "ar" ? "rtl" : "ltr"}
+            />
+            <input
+              className="form-control mb-2"
+              placeholder="Button 1"
+              value={formData.cta.button1[activeLang]}
+              onChange={(e) => handleChange("cta", "button1", e.target.value)}
+              dir={activeLang === "ar" ? "rtl" : "ltr"}
+            />
+            <input
+              className="form-control"
+              placeholder="Button 2"
+              value={formData.cta.button2[activeLang]}
+              onChange={(e) => handleChange("cta", "button2", e.target.value)}
+              dir={activeLang === "ar" ? "rtl" : "ltr"}
+            />
+          </div>
+        )}
       </div>
 
       <div className="d-flex justify-content-start">
         <button
           className="btn btn-success border-0 rounded"
           onClick={handleSave}
+          disabled={loading}
         >
-          {t("saveAll")}
+          {loading ? (
+            <>
+              <span
+                className={`spinner-border spinner-border-sm ${
+                  locale === "en" ? "me-2" : "ms-2"
+                }`}
+                role="status"
+                aria-hidden="true"
+              ></span>
+              {c("saving")}
+            </>
+          ) : (
+            t("saveAll")
+          )}
         </button>
       </div>
     </div>

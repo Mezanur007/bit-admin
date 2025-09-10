@@ -86,6 +86,12 @@ export const ContentProvider = ({ children }) => {
       button2: { en: "", ar: "" },
     },
   });
+  const [techContent, setTechContent] = useState({
+    headline: { en: "", ar: "" },
+    copy: { en: "", ar: "" },
+    techs: [],
+  });
+  const [techLoading, setTechLoading] = useState(true);
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -261,6 +267,29 @@ export const ContentProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const docRef = doc(db, "content", "technologies");
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          setTechContent(data);
+        }
+        setTechLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching techs:", error);
+        setTechLoading(false);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   return (
     <ContentContext.Provider
       value={{
@@ -275,6 +304,8 @@ export const ContentProvider = ({ children }) => {
         contactUs,
         contactInfo,
         portfolio,
+        techContent,
+        techLoading,
       }}
     >
       {children}

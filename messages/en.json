@@ -12,6 +12,7 @@
     "about": "About Us",
     "contact": "Contact Us",
     "portfolio": "Portfolio",
+    "technologies":"Technologies",
     "settings": "Settings",
     "profile": "Profile",
     "password": "Password",
@@ -157,6 +158,7 @@
     "title_ar": "Title (Arabic)",
     "link": "Link",
     "selectCategory": "-- Select Category --",
+    "steps": "Steps",
     "points": "Points",
     "addPoint": "+ Add Point",
     "addItem": "+ Add Item",
@@ -165,6 +167,16 @@
     "changeImage": "Change Image",
     "selectImage": "Select Image",
     "saveAll": "Save All"
+  },
+  "technologies":{
+    "pageTitle": "Technologies Page",
+    "add": "Add Technology",
+    "noTechnologies": "No technologies available.",
+    "technology":"Technology",
+    "technologies":"Technologies",
+    "title":"Title",
+    "headline":"Headline",
+    "copy":"Copy"
   },
   "common": {
     "langSelect": "Select Content Language",

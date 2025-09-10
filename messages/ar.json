@@ -12,6 +12,7 @@
     "about": "من نحن",
     "contact": "اتصل بنا",
     "portfolio": "أعمالنا",
+    "technologies": "التقنيات",
     "settings": "الإعدادات",
     "profile": "الملف الشخصي",
     "password": "كلمة المرور",
@@ -157,6 +158,7 @@
     "title_ar": "العنوان (بالعربية)",
     "link": "الرابط",
     "selectCategory": "-- اختر الفئة --",
+    "steps": "الخطوات",
     "points": "النقاط",
     "addPoint": "+ إضافة نقطة",
     "addItem": "+ إضافة عنصر",
@@ -165,6 +167,16 @@
     "changeImage": "تغيير الصورة",
     "selectImage": "اختر صورة",
     "saveAll": "حفظ الكل"
+  },
+  "technologies": {
+    "pageTitle": "صفحة التقنيات",
+    "add": "إضافة تقنية",
+    "noTechnologies": "لا توجد تقنيات متاحة.",
+    "technology": "تقنية",
+    "technologies": "تقنيات",
+    "title": "العنوان",
+    "headline": "العنوان",
+    "copy": "النص"
   },
   "common": {
     "langSelect": "اختر لغة المحتوى",

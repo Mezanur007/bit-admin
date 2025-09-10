@@ -79,6 +79,10 @@ export default function AdminAccount({ children }) {
       url: "/admin/content/partners",
     },
     {
+      key: "technologies",
+      url: "/admin/content/technologies",
+    },
+    {
       key: "faq",
       url: "/admin/content/faq",
     },
