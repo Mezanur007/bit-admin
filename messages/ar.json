@@ -181,6 +181,7 @@
   },
   "services": {
     "pageTitle": "صفحة الخدمات",
+    "hero": "قسم البطل",
     "add": "إضافة خدمة",
     "noServices": "لا توجد خدمات متاحة.",
     "service": "خدمة",
@@ -191,7 +192,11 @@
     "process": "العملية",
     "addImage": "إضافة صورة",
     "changeImage": "تغيير الصورة",
-    "benefits": "الفوائد"
+    "benefits": "الفوائد",
+    "ctaSection": "قسم CTA",
+    "ctaHeadline": "عنوان CTA",
+    "ctaCopy": "نص CTA",
+    "ctaButtonText": "نص زر CTA"
   },
   "common": {
     "langSelect": "اختر لغة المحتوى",

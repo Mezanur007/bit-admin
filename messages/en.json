@@ -181,6 +181,7 @@
   },
   "services": {
     "pageTitle": "Services Page",
+    "hero": "Hero Section",
     "add": "Add Service",
     "noServices": "No services available.",
     "service": "Service",
@@ -191,7 +192,11 @@
     "process": "Process",
     "addImage": "add Image",
     "changeImage": "change Image",
-    "benefits": "Benefits"
+    "benefits": "Benefits",
+    "ctaSection": "CTA Section",
+    "ctaHeadline": "CTA Headline",
+    "ctaCopy": "CTA Copy",
+    "ctaButtonText": "CTA Button Text"
   },
   "common": {
     "langSelect": "Select Content Language",
