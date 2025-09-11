@@ -14,7 +14,7 @@ export default function Services() {
   const locale = useLocale();
   const t = useTranslations("services");
   const c = useTranslations("common");
-  const { serviceContent, serviceLoading } = useContent();
+  const { portfolio, serviceContent, serviceLoading } = useContent();
   const [pageContent, setPageContent] = useState({
     headline: { en: "", ar: "" },
     copy: { en: "", ar: "" },
@@ -24,13 +24,11 @@ export default function Services() {
     benefitsCopy: { en: "", ar: "" },
     processHeadline: { en: "", ar: "" },
     processCopy: { en: "", ar: "" },
-    ctaHeadline: { en: "", ar: "" },
-    ctaCopy: { en: "", ar: "" },
-    ctaButtonText: { en: "", ar: "" },
   });
   const [services, setServices] = useState([]);
   const [currentService, setCurrentService] = useState({
     id: "",
+    category: "",
     headline: { en: "", ar: "" },
     slug: "",
     copy: { en: "", ar: "" },
@@ -39,6 +37,9 @@ export default function Services() {
     features: [],
     benefits: [],
     process: [],
+    ctaHeadline: { en: "", ar: "" },
+    ctaCopy: { en: "", ar: "" },
+    ctaButtonText: { en: "", ar: "" },
   });
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -47,7 +48,6 @@ export default function Services() {
   const [openSections, setOpenSections] = useState({
     hero: false,
     services: false,
-    cta: false,
   });
   const [slugError, setSlugError] = useState("");
 
@@ -56,6 +56,7 @@ export default function Services() {
   const handleAddService = () => {
     const newService = {
       id: nanoid(),
+      category: "",
       headline: { en: "", ar: "" },
       slug: "",
       copy: { en: "", ar: "" },
@@ -64,6 +65,9 @@ export default function Services() {
       features: [],
       benefits: [],
       process: [],
+      ctaHeadline: { en: "", ar: "" },
+      ctaCopy: { en: "", ar: "" },
+      ctaButtonText: { en: "", ar: "" },
     };
     setServices((prev) => [...prev, newService]);
   };
@@ -214,9 +218,6 @@ export default function Services() {
       benefitsCopy: serviceContent.benefitsCopy,
       processHeadline: serviceContent.processHeadline,
       processCopy: serviceContent.processCopy,
-      ctaHeadline: serviceContent.ctaHeadline,
-      ctaCopy: serviceContent.ctaCopy,
-      ctaButtonText: serviceContent.ctaButtonText,
     });
   }, [serviceContent]);
 
@@ -398,7 +399,7 @@ export default function Services() {
                 {services.map((service, index) => (
                   <div key={service.id} className="card p-3 mb-3">
                     <div className="d-flex justify-content-between mb-3">
-                      <h6>
+                      <h6 style={{ fontWeight: "600" }}>
                         {t("service")} {index + 1}
                       </h6>
                       <button
@@ -459,6 +460,29 @@ export default function Services() {
                         {slugError}
                       </div>
                     )}
+                    <select
+                      className="form-select mb-2"
+                      value={service.category || ""}
+                      onChange={(e) =>
+                        setServices((prev) =>
+                          prev.map((s) =>
+                            s.id === service.id
+                              ? {
+                                  ...s,
+                                  category: e.target.value,
+                                }
+                              : s
+                          )
+                        )
+                      }
+                    >
+                      <option value="">{t("selectCategory")}</option>
+                      {portfolio.categories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.title[activeLang]}
+                        </option>
+                      ))}
+                    </select>
                     <textarea
                       className="form-control mb-2"
                       placeholder={t("copy")}
@@ -506,7 +530,7 @@ export default function Services() {
                       />
                     </div>
                     {["features", "benefits", "process"].map((type) => (
-                      <div key={type} className="mt-3">
+                      <div key={type} className="my-3">
                         <h6 className="d-flex justify-content-between align-items-center">
                           {t(type)}
                           <button
@@ -548,6 +572,72 @@ export default function Services() {
                         ))}
                       </div>
                     ))}
+                    <label className="form-label">{t("ctaHeadline")}</label>
+                    <input
+                      className="form-control mb-2"
+                      value={service.ctaHeadline?.[activeLang] || ""}
+                      onChange={(e) =>
+                        setServices((prev) =>
+                          prev.map((s) =>
+                            s.id === service.id
+                              ? {
+                                  ...s,
+                                  ctaHeadline: {
+                                    ...s.ctaHeadline,
+                                    [activeLang]: e.target.value,
+                                  },
+                                }
+                              : s
+                          )
+                        )
+                      }
+                      dir={activeLang === "ar" ? "rtl" : "ltr"}
+                    />
+
+                    <label className="form-label">{t("ctaCopy")}</label>
+                    <textarea
+                      className="form-control mb-2"
+                      rows={3}
+                      value={service.ctaCopy?.[activeLang] || ""}
+                      onChange={(e) =>
+                        setServices((prev) =>
+                          prev.map((s) =>
+                            s.id === service.id
+                              ? {
+                                  ...s,
+                                  ctaCopy: {
+                                    ...s.ctaCopy,
+                                    [activeLang]: e.target.value,
+                                  },
+                                }
+                              : s
+                          )
+                        )
+                      }
+                      dir={activeLang === "ar" ? "rtl" : "ltr"}
+                    />
+
+                    <label className="form-label">{t("ctaButtonText")}</label>
+                    <input
+                      className="form-control"
+                      value={service.ctaButtonText?.[activeLang] || ""}
+                      onChange={(e) =>
+                        setServices((prev) =>
+                          prev.map((s) =>
+                            s.id === service.id
+                              ? {
+                                  ...s,
+                                  ctaButtonText: {
+                                    ...s.ctaButtonText,
+                                    [activeLang]: e.target.value,
+                                  },
+                                }
+                              : s
+                          )
+                        )
+                      }
+                      dir={activeLang === "ar" ? "rtl" : "ltr"}
+                    />
                   </div>
                 ))}
               </>
@@ -558,69 +648,6 @@ export default function Services() {
             >
               + {t("add")}
             </button>
-          </div>
-        )}
-      </div>
-
-      <div className="mb-4 rounded border">
-        <div
-          className="d-flex justify-content-between align-items-center p-2"
-          style={{ cursor: "pointer", backgroundColor: "#f7f7f7" }}
-          onClick={() => toggleSection("cta")}
-        >
-          <h5 className="mb-0">{t("ctaSection")}</h5>
-          {openSections.cta ? <FaChevronUp /> : <FaChevronDown />}
-        </div>
-        {openSections.cta && (
-          <div className="p-3">
-            <label className="form-label">{t("ctaHeadline")}</label>
-            <input
-              className="form-control mb-2"
-              value={pageContent.ctaHeadline[activeLang]}
-              onChange={(e) =>
-                setPageContent((prev) => ({
-                  ...prev,
-                  ctaHeadline: {
-                    ...prev.ctaHeadline,
-                    [activeLang]: e.target.value,
-                  },
-                }))
-              }
-              dir={activeLang === "ar" ? "rtl" : "ltr"}
-            />
-
-            <label className="form-label">{t("ctaCopy")}</label>
-            <textarea
-              className="form-control mb-2"
-              rows={3}
-              value={pageContent.ctaCopy[activeLang]}
-              onChange={(e) =>
-                setPageContent((prev) => ({
-                  ...prev,
-                  ctaCopy: {
-                    ...prev.ctaCopy,
-                    [activeLang]: e.target.value,
-                  },
-                }))
-              }
-              dir={activeLang === "ar" ? "rtl" : "ltr"}
-            />
-
-            <label className="form-label">{t("ctaButtonText")}</label>
-            <input
-              className="form-control"
-              value={pageContent.ctaButtonText[activeLang]}
-              onChange={(e) =>
-                setPageContent((prev) => ({
-                  ...prev,
-                  ctaButtonText: {
-                    ...prev.ctaButtonText,
-                    [activeLang]: e.target.value,
-                  },
-                }))
-              }
-              dir={activeLang === "ar" ? "rtl" : "ltr"}
-            />
           </div>
         )}
       </div>

@@ -202,7 +202,8 @@
     "processHeadline": "عنوان العملية",
     "processCopy": "نص العملية",
     "benefitsHeadline": "عنوان الفوائد",
-    "benefitsCopy": "نص الفوائد"
+    "benefitsCopy": "نص الفوائد",
+    "selectCategory": "-- اختر الفئة --"
   },
   "common": {
     "langSelect": "اختر لغة المحتوى",

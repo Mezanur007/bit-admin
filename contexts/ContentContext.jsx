@@ -101,9 +101,6 @@ export const ContentProvider = ({ children }) => {
     benefitsCopy: { en: "", ar: "" },
     processHeadline: { en: "", ar: "" },
     processCopy: { en: "", ar: "" },
-    ctaHeadline: { en: "", ar: "" },
-    ctaCopy: { en: "", ar: "" },
-    ctaButtonText: { en: "", ar: "" },
     services: [],
   });
   const [serviceLoading, setServiceLoading] = useState(false);

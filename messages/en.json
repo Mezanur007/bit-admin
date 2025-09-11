@@ -202,7 +202,8 @@
     "processHeadline": "Process Headline",
     "processCopy": "Process Copy",
     "benefitsHeadline": "Benefits Headline",
-    "benefitsCopy": "Benefits Copy"
+    "benefitsCopy": "Benefits Copy",
+    "selectCategory": "-- Select Category --"
   },
   "common": {
     "langSelect": "Select Content Language",
