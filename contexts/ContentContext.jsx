@@ -95,6 +95,15 @@ export const ContentProvider = ({ children }) => {
   const [serviceContent, setServiceContent] = useState({
     headline: { en: "", ar: "" },
     copy: { en: "", ar: "" },
+    featuresHeadline: { en: "", ar: "" },
+    featuresCopy: { en: "", ar: "" },
+    benefitsHeadline: { en: "", ar: "" },
+    benefitsCopy: { en: "", ar: "" },
+    processHeadline: { en: "", ar: "" },
+    processCopy: { en: "", ar: "" },
+    ctaHeadline: { en: "", ar: "" },
+    ctaCopy: { en: "", ar: "" },
+    ctaButtonText: { en: "", ar: "" },
     services: [],
   });
   const [serviceLoading, setServiceLoading] = useState(false);
@@ -336,7 +345,7 @@ export const ContentProvider = ({ children }) => {
         techContent,
         techLoading,
         serviceContent,
-        serviceLoading
+        serviceLoading,
       }}
     >
       {children}

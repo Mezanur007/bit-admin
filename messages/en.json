@@ -196,7 +196,13 @@
     "ctaSection": "CTA Section",
     "ctaHeadline": "CTA Headline",
     "ctaCopy": "CTA Copy",
-    "ctaButtonText": "CTA Button Text"
+    "ctaButtonText": "CTA Button Text",
+    "featuresHeadline": "Features Headline",
+    "featuresCopy": "Features Copy",
+    "processHeadline": "Process Headline",
+    "processCopy": "Process Copy",
+    "benefitsHeadline": "Benefits Headline",
+    "benefitsCopy": "Benefits Copy"
   },
   "common": {
     "langSelect": "Select Content Language",

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, act } from "react";
+import React, { useState, useEffect } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/configuration/firebase-config";
 import { toast } from "react-toastify";
@@ -18,6 +18,12 @@ export default function Services() {
   const [pageContent, setPageContent] = useState({
     headline: { en: "", ar: "" },
     copy: { en: "", ar: "" },
+    featuresHeadline: { en: "", ar: "" },
+    featuresCopy: { en: "", ar: "" },
+    benefitsHeadline: { en: "", ar: "" },
+    benefitsCopy: { en: "", ar: "" },
+    processHeadline: { en: "", ar: "" },
+    processCopy: { en: "", ar: "" },
     ctaHeadline: { en: "", ar: "" },
     ctaCopy: { en: "", ar: "" },
     ctaButtonText: { en: "", ar: "" },
@@ -71,15 +77,9 @@ export default function Services() {
     const previewUrl = URL.createObjectURL(file);
 
     setServices((prev) =>
-      prev.map((s) => {
-        if (s.id === id) {
-          if (s.image?.path) {
-            setDeletedImages((imgs) => [...imgs, s.image.path]);
-          }
-          return { ...s, image: { ...s.image, file, url: previewUrl } };
-        }
-        return s;
-      })
+      prev.map((s) =>
+        s.id === id ? { ...s, image: { ...s.image, file, url: previewUrl } } : s
+      )
     );
   };
 
@@ -143,30 +143,6 @@ export default function Services() {
     try {
       setLoading(true);
 
-      const uploadedServices = await Promise.all(
-        services.map(async (s) => {
-          if (s.image.file) {
-            const formData = new FormData();
-            formData.append("file", s.image.file);
-            formData.append("path", `services/${s.id}`);
-            formData.append("bucket", "bit-content-images");
-
-            const res = await fetch("/api/image", {
-              method: "POST",
-              body: formData,
-            });
-            if (!res.ok) throw new Error("Image upload failed");
-            const data = await res.json();
-
-            return {
-              ...s,
-              image: { url: data.url, path: `services/${s.id}` },
-            };
-          }
-          return s;
-        })
-      );
-
       await Promise.all(
         deletedImages.map(async (path) => {
           const resImg = await fetch(`/api/image`, {
@@ -181,13 +157,37 @@ export default function Services() {
         })
       );
 
+      const uploadedServices = await Promise.all(
+        services.map(async (s) => {
+          if (s.image.file) {
+            const formData = new FormData();
+            formData.append("file", s.image.file);
+            formData.append("path", `content/services/${s.id}`);
+            formData.append("bucket", "bit-content-images");
+
+            const res = await fetch("/api/image", {
+              method: "POST",
+              body: formData,
+            });
+            if (!res.ok) throw new Error("Image upload failed");
+            const data = await res.json();
+
+            return {
+              ...s,
+              image: { url: data.url, path: `content/services/${s.id}` },
+            };
+          }
+          return s;
+        })
+      );
+
       await updateDoc(doc(db, "content", "services"), {
         ...pageContent,
         services: uploadedServices,
       });
 
       setServices(uploadedServices);
-      toast.success("Services updated successfully!");
+      toast.success(c("saveSuccess"));
     } catch (err) {
       console.error(err);
       toast.error("Failed to save");
@@ -202,6 +202,23 @@ export default function Services() {
       [section]: !prev[section],
     }));
   };
+
+  useEffect(() => {
+    setServices(serviceContent.services);
+    setPageContent({
+      headline: serviceContent.headline,
+      copy: serviceContent.copy,
+      featuresHeadline: serviceContent.featuresHeadline,
+      featuresCopy: serviceContent.featuresCopy,
+      benefitsHeadline: serviceContent.benefitsHeadline,
+      benefitsCopy: serviceContent.benefitsCopy,
+      processHeadline: serviceContent.processHeadline,
+      processCopy: serviceContent.processCopy,
+      ctaHeadline: serviceContent.ctaHeadline,
+      ctaCopy: serviceContent.ctaCopy,
+      ctaButtonText: serviceContent.ctaButtonText,
+    });
+  }, [serviceContent]);
 
   return (
     <div
@@ -237,7 +254,7 @@ export default function Services() {
           <div className="p-3">
             <label className="form-label">{t("headline")}</label>
             <input
-              className="form-control"
+              className="form-control mb-2"
               value={pageContent.headline[activeLang]}
               onChange={(e) =>
                 setPageContent((prev) => ({
@@ -275,6 +292,99 @@ export default function Services() {
         </div>
         {openSections.services && (
           <div className="p-3">
+            <label className="form-label">{t("featuresHeadline")}</label>
+            <input
+              className="form-control mb-2"
+              value={pageContent.featuresHeadline[activeLang]}
+              onChange={(e) =>
+                setPageContent((prev) => ({
+                  ...prev,
+                  featuresHeadline: {
+                    ...prev.featuresHeadline,
+                    [activeLang]: e.target.value,
+                  },
+                }))
+              }
+              dir={activeLang === "ar" ? "rtl" : "ltr"}
+            />
+            <label className="form-label">{t("featuresCopy")}</label>
+            <textarea
+              className="form-control mb-2"
+              rows={3}
+              value={pageContent.featuresCopy[activeLang]}
+              onChange={(e) =>
+                setPageContent((prev) => ({
+                  ...prev,
+                  featuresCopy: {
+                    ...prev.featuresCopy,
+                    [activeLang]: e.target.value,
+                  },
+                }))
+              }
+              dir={activeLang === "ar" ? "rtl" : "ltr"}
+            />
+            <label className="form-label">{t("benefitsHeadline")}</label>
+            <input
+              className="form-control mb-2"
+              value={pageContent.benefitsHeadline[activeLang]}
+              onChange={(e) =>
+                setPageContent((prev) => ({
+                  ...prev,
+                  benefitsHeadline: {
+                    ...prev.benefitsHeadline,
+                    [activeLang]: e.target.value,
+                  },
+                }))
+              }
+              dir={activeLang === "ar" ? "rtl" : "ltr"}
+            />
+            <label className="form-label">{t("benefitsCopy")}</label>
+            <textarea
+              className="form-control mb-2"
+              rows={3}
+              value={pageContent.benefitsCopy[activeLang]}
+              onChange={(e) =>
+                setPageContent((prev) => ({
+                  ...prev,
+                  benefitsCopy: {
+                    ...prev.benefitsCopy,
+                    [activeLang]: e.target.value,
+                  },
+                }))
+              }
+              dir={activeLang === "ar" ? "rtl" : "ltr"}
+            />
+            <label className="form-label">{t("processHeadline")}</label>
+            <input
+              className="form-control mb-2"
+              value={pageContent.processHeadline[activeLang]}
+              onChange={(e) =>
+                setPageContent((prev) => ({
+                  ...prev,
+                  processHeadline: {
+                    ...prev.processHeadline,
+                    [activeLang]: e.target.value,
+                  },
+                }))
+              }
+              dir={activeLang === "ar" ? "rtl" : "ltr"}
+            />
+            <label className="form-label">{t("processCopy")}</label>
+            <textarea
+              className="form-control mb-2"
+              rows={3}
+              value={pageContent.processCopy[activeLang]}
+              onChange={(e) =>
+                setPageContent((prev) => ({
+                  ...prev,
+                  processCopy: {
+                    ...prev.processCopy,
+                    [activeLang]: e.target.value,
+                  },
+                }))
+              }
+              dir={activeLang === "ar" ? "rtl" : "ltr"}
+            />
             {serviceLoading ? (
               <div className="d-flex justify-content-center align-items-center my-5">
                 <div className="spinner-border primary-color" role="status">
@@ -368,6 +478,7 @@ export default function Services() {
                           )
                         )
                       }
+                      rows={5}
                       dir={activeLang === "ar" ? "rtl" : "ltr"}
                     />
                     {service.image.url && (
@@ -464,7 +575,7 @@ export default function Services() {
           <div className="p-3">
             <label className="form-label">{t("ctaHeadline")}</label>
             <input
-              className="form-control"
+              className="form-control mb-2"
               value={pageContent.ctaHeadline[activeLang]}
               onChange={(e) =>
                 setPageContent((prev) => ({
@@ -480,7 +591,7 @@ export default function Services() {
 
             <label className="form-label">{t("ctaCopy")}</label>
             <textarea
-              className="form-control"
+              className="form-control mb-2"
               rows={3}
               value={pageContent.ctaCopy[activeLang]}
               onChange={(e) =>

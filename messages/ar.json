@@ -196,7 +196,13 @@
     "ctaSection": "قسم CTA",
     "ctaHeadline": "عنوان CTA",
     "ctaCopy": "نص CTA",
-    "ctaButtonText": "نص زر CTA"
+    "ctaButtonText": "نص زر CTA",
+    "featuresHeadline": "عنوان المميزات",
+    "featuresCopy": "نص المميزات",
+    "processHeadline": "عنوان العملية",
+    "processCopy": "نص العملية",
+    "benefitsHeadline": "عنوان الفوائد",
+    "benefitsCopy": "نص الفوائد"
   },
   "common": {
     "langSelect": "اختر لغة المحتوى",
