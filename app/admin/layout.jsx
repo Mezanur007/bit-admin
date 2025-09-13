@@ -110,6 +110,10 @@ export default function AdminAccount({ children }) {
       key: "services",
       url: "/admin/content/services",
     },
+    {
+      key: "home",
+      url: "/admin/content/home",
+    },
   ];
 
   //  useEffect(() => {

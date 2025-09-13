@@ -146,7 +146,6 @@ export default function AboutUs() {
         border: "1px solid rgba(227,227,227,1)",
       }}
     >
-      {/* Language Switch */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h4>{t("pageTitle")}</h4>
         <select

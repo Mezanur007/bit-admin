@@ -104,6 +104,42 @@ export const ContentProvider = ({ children }) => {
     services: [],
   });
   const [serviceLoading, setServiceLoading] = useState(false);
+  const [homeData, setHomeData] = useState({
+    hero: {
+      headline: { en: "", ar: "" },
+      copy: { en: "", ar: "" },
+      buttonText: { en: "", ar: "" },
+    },
+    highlights: {
+      headline: { en: "", ar: "" },
+      copy: { en: "", ar: "" },
+      items: [],
+    },
+    security: {
+      headline: { en: "", ar: "" },
+      copy: { en: "", ar: "" },
+      points: [],
+    },
+    marketLeader: {
+      headline: { en: "", ar: "" },
+      copy: { en: "", ar: "" },
+      items: [],
+      findMoreText: { en: "", ar: "" },
+    },
+    aboutSection: {
+      headline: { en: "", ar: "" },
+      copy: { en: "", ar: "" },
+      points: [],
+      projects: { count: 0, text: { en: "", ar: "" } },
+      members: { count: 0, text: { en: "", ar: "" } },
+      experience: { count: 0, text: { en: "", ar: "" } },
+      clients: { count: 0, text: { en: "", ar: "" } },
+    },
+    specialServices: {
+      headline: { en: "", ar: "" },
+      services: [],
+    },
+  });
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -325,6 +361,27 @@ export const ContentProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const docRef = doc(db, "content", "home");
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          setHomeData(data);
+        }
+      },
+      (error) => {
+        console.error("Error fetching home data:", error);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   return (
     <ContentContext.Provider
       value={{
@@ -343,6 +400,7 @@ export const ContentProvider = ({ children }) => {
         techLoading,
         serviceContent,
         serviceLoading,
+        homeData
       }}
     >
       {children}
