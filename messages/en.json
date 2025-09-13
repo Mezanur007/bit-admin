@@ -234,6 +234,39 @@
     "count": "Count",
     "text": "Text"
   },
+  "admins": {
+    "pageTitle": "Admins",
+    "add": "Add",
+    "removeConfirm": "Are you sure you want to remove this admin",
+    "remove": "Remove",
+    "noAdmins": "No Admins",
+    "createdAt": "Created At",
+    "name": "Name",
+    "email": "Email",
+    "removedSuccess": "Admin removed successfully",
+    "removedError": "Failed to remove admin"
+  },
+  "addAdmin": {
+    "pageTitle": "Add Admin",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "namePlaceholder": "Enter admin name",
+    "emailPlaceholder": "Enter admin email",
+    "passwordPlaceholder": "Enter admin password",
+    "success": "Admin added successfully",
+    "error": "Failed to add admin"
+  },
+  "login": {
+    "pageTitle": "Log in to your account",
+    "subtitle": "Welcome back! Please enter your details",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "login": "Login",
+    "notAdmin": "You are not an admin.",
+    "verifyEmail": "Verify your email to continue"
+  },
   "common": {
     "langSelect": "Select Content Language",
     "add": "Add",

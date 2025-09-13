@@ -7,18 +7,20 @@ import { auth } from "@/configuration/firebase-config";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-//import useAuth from "@/hooks/UseAuth";
+import useAuth from "@/hooks/UseAuth";
 import { FiLogIn } from "react-icons/fi";
 import { GoLock } from "react-icons/go";
 import { LuAtSign } from "react-icons/lu";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useLocale, useTranslations } from "next-intl";
 
 import Loading from "@/components/Loading";
 
-export default function LoginPage({ params }) {
-  const { lang } = use(params);
-  //  const { user, isAdmin, loading: authLoading } = useAuth();
+export default function LoginPage() {
+  const locale = useLocale();
+  const t = useTranslations("login");
+  const { user, isAdmin, loading: authLoading } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -26,31 +28,6 @@ export default function LoginPage({ params }) {
     email: "",
     password: "",
   });
-
-  const translations = {
-    en: {
-      title: "Log in to your account",
-      subtitle: "Welcome back! Please enter your details",
-      email: "Email",
-      password: "Password",
-      forgotPassword: "Forgot password?",
-      login: "Login",
-      notAdmin: "You are not an admin.",
-      verifyEmail: "Verify your email to continue",
-    },
-    ar: {
-      title: "تسجيل الدخول إلى حسابك",
-      subtitle: "مرحبًا بعودتك! الرجاء إدخال بياناتك",
-      email: "البريد الإلكتروني",
-      password: "كلمة المرور",
-      forgotPassword: "هل نسيت كلمة المرور؟",
-      login: "تسجيل الدخول",
-      notAdmin: "أنت لست مشرفًا.",
-      verifyEmail: "يرجى التحقق من بريدك الإلكتروني للمتابعة",
-    },
-  };
-
-  const t = translations[lang] || translations.en;
 
   const handleDataChange = (e) => {
     const { name, value } = e.target;
@@ -62,42 +39,40 @@ export default function LoginPage({ params }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    //setLoading(true);
-    //signInWithEmailAndPassword(auth, userData.email, userData.password)
-    //  .then(async (userCredentials) => {
-    //    const user = userCredentials.user;
-    //    await user.getIdTokenResult().then(async (idTokenResult) => {
-    //      const claims = idTokenResult.claims;
-    //      if (claims.isAdmin) {
-    //        router.push(`/${lang}/admin/products`);
-    //      } else {
-    //        toast.error(t.notAdmin);
-    //        await signOut(auth);
-    //      }
-    //    });
-    //  })
-    //  .catch((error) => {
-    //    toast.error(error.message);
-    //    console.error("Error logging in:", error.message);
-    //  })
-    //  .finally(() => {
-    //    setLoading(false);
-    //  });
+    setLoading(true);
+    signInWithEmailAndPassword(auth, userData.email, userData.password)
+      .then(async (userCredentials) => {
+        const user = userCredentials.user;
+        await user.getIdTokenResult().then(async (idTokenResult) => {
+          const claims = idTokenResult.claims;
+          if (claims.isAdmin) {
+            router.push(`/admin/articles`);
+          } else {
+            toast.error(t("notAdmin"));
+            await signOut(auth);
+          }
+        });
+      })
+      .catch((error) => {
+        toast.error(error.message);
+        console.error("Error logging in:", error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
-  //  useEffect(() => {
-  //    if (!authLoading && user && isAdmin) {
-  //      router.push(`/${lang}/admin/products`);
-  //    }
-  //  }, [authLoading, user, isAdmin]);
+  useEffect(() => {
+    if (!authLoading && user && isAdmin) {
+      router.push(`/admin/articles`);
+    }
+  }, [authLoading, user, isAdmin]);
 
-  //  if (authLoading) {
-  //    return <Loading />;
-  //  }
+  if (authLoading) {
+    return <Loading />;
+  }
 
-  //  return !user ? (
-
-  return (
+  return !user ? (
     <div
       className="d-flex align-items-center"
       style={{ minHeight: "calc(100vh - 88px)" }}
@@ -129,13 +104,13 @@ export default function LoginPage({ params }) {
               className="fs-4 text-center mb-2"
               style={{ fontWeight: "600" }}
             >
-              {t.title}
+              {t("pageTitle")}
             </div>
             <div
               className="text-secondary text-center mb-4"
               style={{ fontSize: "14px" }}
             >
-              {t.subtitle}
+              {t("subtitle")}
             </div>
             <form className="w-100" onSubmit={handleLogin}>
               <div className="mb-3 position-relative">
@@ -144,8 +119,8 @@ export default function LoginPage({ params }) {
                     position: "absolute",
                     top: "50%",
                     transform: "translateY(-50%)",
-                    left: lang === "en" ? "8px" : "",
-                    right: lang === "ar" ? "8px" : "",
+                    left: locale === "en" ? "8px" : "",
+                    right: locale === "ar" ? "8px" : "",
                   }}
                 >
                   <LuAtSign
@@ -161,11 +136,11 @@ export default function LoginPage({ params }) {
                   className="form-control"
                   style={{
                     borderRadius: "15px",
-                    paddingLeft: lang === "en" ? "35px" : "",
-                    paddingRight: lang === "ar" ? "35px" : "",
+                    paddingLeft: locale === "en" ? "35px" : "",
+                    paddingRight: locale === "ar" ? "35px" : "",
                     height: "50px",
                   }}
-                  placeholder={t.email}
+                  placeholder={t("email")}
                   id="userEmail"
                   name="email"
                   aria-describedby="emailHelp"
@@ -181,8 +156,8 @@ export default function LoginPage({ params }) {
                     position: "absolute",
                     top: "50%",
                     transform: "translateY(-50%)",
-                    left: lang === "en" ? "8px" : "",
-                    right: lang === "ar" ? "8px" : "",
+                    left: locale === "en" ? "8px" : "",
+                    right: locale === "ar" ? "8px" : "",
                   }}
                 >
                   <GoLock
@@ -196,11 +171,11 @@ export default function LoginPage({ params }) {
                 <input
                   type={visible ? "text" : "password"}
                   className="form-control"
-                  placeholder={t.password}
+                  placeholder={t("password")}
                   style={{
                     borderRadius: "15px",
-                    paddingLeft: lang === "en" ? "35px" : "",
-                    paddingRight: lang === "ar" ? "35px" : "",
+                    paddingLeft: locale === "en" ? "35px" : "",
+                    paddingRight: locale === "ar" ? "35px" : "",
                     height: "50px",
                   }}
                   id="userPassword"
@@ -215,8 +190,8 @@ export default function LoginPage({ params }) {
                       position: "absolute",
                       top: "50%",
                       transform: "translateY(-50%)",
-                      right: lang === "en" ? 10 : "",
-                      left: lang === "ar" ? 10 : "",
+                      right: locale === "en" ? 10 : "",
+                      left: locale === "ar" ? 10 : "",
                       color: "rgba(134, 141, 151, 1)",
                       cursor: "pointer",
                     }}
@@ -228,8 +203,8 @@ export default function LoginPage({ params }) {
                       position: "absolute",
                       top: "50%",
                       transform: "translateY(-50%)",
-                      right: lang === "en" ? 10 : "",
-                      left: lang === "ar" ? 10 : "",
+                      right: locale === "en" ? 10 : "",
+                      left: locale === "ar" ? 10 : "",
                       color: "rgba(134, 141, 151, 1)",
                       cursor: "pointer",
                     }}
@@ -240,11 +215,11 @@ export default function LoginPage({ params }) {
 
               <div className="mb-3 d-flex justify-content-end">
                 <Link
-                  href={`/${lang}/forgot-password`}
+                  href={`/forgot-password`}
                   className="text-decoration-none text-dark"
                   style={{ fontSize: "14px", fontWeight: "600" }}
                 >
-                  {t.forgotPassword}
+                  {t("forgotPassword")}
                 </Link>
               </div>
 
@@ -263,7 +238,7 @@ export default function LoginPage({ params }) {
                     ></span>
                   </>
                 ) : (
-                  <>{t.login}</>
+                  <>{t("login")}</>
                 )}
               </button>
             </form>
@@ -271,9 +246,7 @@ export default function LoginPage({ params }) {
         </div>
       </div>
     </div>
+  ) : (
+    <Loading />
   );
-
-  //  ) : (
-  //    <Loading />
-  //  );
 }

@@ -400,7 +400,7 @@ export const ContentProvider = ({ children }) => {
         techLoading,
         serviceContent,
         serviceLoading,
-        homeData
+        homeData,
       }}
     >
       {children}

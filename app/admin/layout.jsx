@@ -2,8 +2,9 @@
 import styles from "@/styles/admin.module.css";
 import React, { useState, useEffect } from "react";
 import { useMessages } from "@/contexts/MessagesContext";
-import { use } from "react";
 import Link from "next/link";
+import useAuth from "@/hooks/UseAuth";
+import { auth } from "@/configuration/firebase-config";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -24,20 +25,15 @@ export default function AdminAccount({ children }) {
   const router = useRouter();
   const { unreadMessages } = useMessages();
   const pathName = usePathname();
-  //  const { loading, user, isAdmin } = useAuth();
-  const [showSettingDropdown, setShowSettingDropdown] = useState(false);
+  const { loading, user, isAdmin } = useAuth();
   const [showContentDropdown, setShowContentDropdown] = useState(false);
 
   const handleLogout = async () => {
     try {
-      //  await signOut(auth);
+      await signOut(auth);
     } catch (error) {
       console.error("Error signing out:", error.message);
     }
-  };
-
-  const toggleSettingDropdown = () => {
-    setShowSettingDropdown(!showSettingDropdown);
   };
 
   const toggleContentDropdown = () => {
@@ -116,19 +112,17 @@ export default function AdminAccount({ children }) {
     },
   ];
 
-  //  useEffect(() => {
-  //    if (!loading && (!user || !isAdmin)) {
-  //      router.push(`/login`);
-  //    }
-  //  }, [loading, user, isAdmin]);
+  useEffect(() => {
+    if (!loading && (!user || !isAdmin)) {
+      router.push(`/login`);
+    }
+  }, [loading, user, isAdmin]);
 
-  //  if (loading) {
-  //    return <Loading />;
-  //  }
+  if (loading) {
+    return <Loading />;
+  }
 
-  //  return user && isAdmin ? (
-
-  return (
+  return user && isAdmin ? (
     <>
       <div
         className="d-flex align-items-center justify-content-between px-4 py-3"
@@ -275,85 +269,6 @@ export default function AdminAccount({ children }) {
                 )}
               </div>
               <div
-                className={`${styles["account-nav-item"]} mb-1 mb-xl-2 cursor-pointer`}
-                onClick={toggleSettingDropdown}
-              >
-                <SettingsOutlinedIcon
-                  className={locale === "en" ? "me-3" : "ms-3"}
-                />
-                <h5 className="m-0 w-100">{t("settings")}</h5>
-                {showSettingDropdown === false ? (
-                  <ArrowDropDownSharpIcon />
-                ) : (
-                  <ArrowDropUpSharpIcon />
-                )}
-              </div>
-              <div>
-                {showSettingDropdown && (
-                  <div
-                    style={{
-                      paddingLeft: locale === "en" ? "40px" : "",
-                      paddingRight: locale === "ar" ? "40px" : "",
-                    }}
-                  >
-                    <div
-                      data-bs-dismiss="offcanvas"
-                      data-bs-target="#offcanvasMenu"
-                    >
-                      <Link
-                        className={`${
-                          styles["account-nav-item"]
-                        } mb-1 mb-xl-2 ${
-                          pathName === `/admin/profile`
-                            ? styles["active-route"]
-                            : ""
-                        }`}
-                        href={`/admin/profile`}
-                        style={{ fontWeight: "500" }}
-                      >
-                        {t("profile")}
-                      </Link>
-                    </div>
-                    <div
-                      data-bs-dismiss="offcanvas"
-                      data-bs-target="#offcanvasMenu"
-                    >
-                      <Link
-                        className={`${
-                          styles["account-nav-item"]
-                        } mb-1 mb-xl-2 ${
-                          pathName === `/admin/change-password`
-                            ? styles["active-route"]
-                            : ""
-                        }`}
-                        href={`/admin/change-password`}
-                        style={{ fontWeight: "500" }}
-                      >
-                        {t("password")}
-                      </Link>
-                    </div>
-                    <div
-                      data-bs-dismiss="offcanvas"
-                      data-bs-target="#offcanvasMenu"
-                    >
-                      <Link
-                        className={`${
-                          styles["account-nav-item"]
-                        } mb-1 mb-xl-2 ${
-                          pathName === `/admin/change-email`
-                            ? styles["active-route"]
-                            : ""
-                        }`}
-                        href={`/admin/change-email`}
-                        style={{ fontWeight: "500" }}
-                      >
-                        {t("email")}
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div
                 className={`${styles["sign-out"]} ${styles["account-nav-item"]} mt-5 cursor-pointer`}
                 onClick={handleLogout}
                 data-bs-dismiss="offcanvas"
@@ -372,9 +287,7 @@ export default function AdminAccount({ children }) {
         </div>
       </div>
     </>
+  ) : (
+    <Loading />
   );
-
-  //  ) : (
-  //    <Loading />
-  //  );
 }
