@@ -5,6 +5,7 @@ import { useMessages } from "@/contexts/MessagesContext";
 import Link from "next/link";
 import useAuth from "@/hooks/UseAuth";
 import { auth } from "@/configuration/firebase-config";
+import { signOut } from "firebase/auth";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
