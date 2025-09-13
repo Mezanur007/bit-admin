@@ -267,6 +267,13 @@
     "notAdmin": "You are not an admin.",
     "verifyEmail": "Verify your email to continue"
   },
+  "forgotPassword":{
+     "pageTitle": "Forgot Password",
+      "subtitle": "A password reset link will be sent to the email",
+      "emailPlaceholder": "Email",
+      "send": "Send",
+      "success":"Password reset link sent"
+  },
   "common": {
     "langSelect": "Select Content Language",
     "add": "Add",

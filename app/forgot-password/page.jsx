@@ -1,43 +1,25 @@
 "use client";
 import React, { useState } from "react";
-import { use } from "react";
 import styles from "@/styles/login.module.css";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/configuration/firebase-config";
 import { toast } from "react-toastify";
 import { LuAtSign } from "react-icons/lu";
 import { GoLock } from "react-icons/go";
+import { useLocale, useTranslations } from "next-intl";
 
-export default function ForgotPassword({ params }) {
-  const { lang } = use(params);
+export default function ForgotPassword() {
+  const locale = useLocale();
+  const t = useTranslations("forgotPassword");
   const [email, setEmail] = useState("");
   const [loading, setloading] = useState(false);
-
-  const translations = {
-    en: {
-      title: "Forgot Password",
-      subtitle: "A password reset link will be sent to the email",
-      emailPlaceholder: "Email",
-      send: "Send",
-      success: (email) => `Password reset link sent to ${email}`,
-    },
-    ar: {
-      title: "نسيت كلمة المرور",
-      subtitle: "سيتم إرسال رابط إعادة تعيين كلمة المرور إلى البريد الإلكتروني",
-      emailPlaceholder: "البريد الإلكتروني",
-      send: "إرسال",
-      success: (email) => `تم إرسال رابط إعادة تعيين كلمة المرور إلى ${email}`,
-    },
-  };
-
-  const t = translations[lang] || translations.en;
 
   const handleForgotPassword = (e) => {
     e.preventDefault();
     setloading(true);
     sendPasswordResetEmail(auth, email)
       .then(() => {
-        toast.success(t.success(email));
+        toast.success(t("success"));
         setEmail("");
       })
       .catch((error) => toast.error(error.message))
@@ -76,13 +58,13 @@ export default function ForgotPassword({ params }) {
               className="fs-4 text-center mb-2"
               style={{ fontWeight: "600" }}
             >
-              {t.title}
+              {t("pageTitle")}
             </div>
             <div
               className="text-secondary text-center mb-4"
               style={{ fontSize: "14px" }}
             >
-              {t.subtitle}
+              {t("subtitle")}
             </div>
             <form className="w-100" onSubmit={handleForgotPassword}>
               <div className="mb-3 position-relative">
@@ -91,8 +73,8 @@ export default function ForgotPassword({ params }) {
                     position: "absolute",
                     top: "50%",
                     transform: "translateY(-50%)",
-                    left: lang === "en" ? "8px" : "",
-                    right: lang === "ar" ? "8px" : "",
+                    left: locale === "en" ? "8px" : "",
+                    right: locale === "ar" ? "8px" : "",
                   }}
                 >
                   <LuAtSign
@@ -108,11 +90,11 @@ export default function ForgotPassword({ params }) {
                   className="form-control"
                   style={{
                     borderRadius: "15px",
-                    paddingRight: lang === "ar" ? "35px" : "",
-                    paddingLeft: lang === "en" ? "35px" : "",
+                    paddingRight: locale === "ar" ? "35px" : "",
+                    paddingLeft: locale === "en" ? "35px" : "",
                     height: "50px",
                   }}
-                  placeholder={t.emailPlaceholder}
+                  placeholder={t("emailPlaceholder")}
                   id="userEmail"
                   name="email"
                   aria-describedby="emailHelp"
@@ -136,7 +118,7 @@ export default function ForgotPassword({ params }) {
                     ></span>
                   </>
                 ) : (
-                  <>{t.send}</>
+                  <>{t("send")}</>
                 )}
               </button>
             </form>
