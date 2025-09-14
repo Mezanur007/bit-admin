@@ -89,9 +89,7 @@ export const ContentProvider = ({ children }) => {
   const [techContent, setTechContent] = useState({
     headline: { en: "", ar: "" },
     copy: { en: "", ar: "" },
-    techs: [],
   });
-  const [techLoading, setTechLoading] = useState(true);
   const [serviceContent, setServiceContent] = useState({
     headline: { en: "", ar: "" },
     copy: { en: "", ar: "" },
@@ -325,11 +323,9 @@ export const ContentProvider = ({ children }) => {
           const data = snapshot.data();
           setTechContent(data);
         }
-        setTechLoading(false);
       },
       (error) => {
         console.error("Error fetching techs:", error);
-        setTechLoading(false);
       }
     );
 
@@ -397,7 +393,6 @@ export const ContentProvider = ({ children }) => {
         contactInfo,
         portfolio,
         techContent,
-        techLoading,
         serviceContent,
         serviceLoading,
         homeData,
