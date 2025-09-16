@@ -290,6 +290,15 @@
     "action": "إجراء",
     "searchPlaceholder": "أدخل البريد الإلكتروني"
   },
+  "sendLetter": {
+    "pageTitle": "إرسال النشرة الإخبارية",
+    "subject": "الموضوع",
+    "body": "النص",
+    "send": "إرسال",
+    "sending": "جارٍ الإرسال",
+    "sendSuccess": "تم الإرسال بنجاح",
+    "noSubscribers": "لا يوجد مشتركين لإرسال النشرة الإخبارية إليهم."
+  },
   "common": {
     "langSelect": "اختر لغة المحتوى",
     "add": "إضافة",

@@ -15,7 +15,7 @@
     "technologies": "Technologies",
     "services": "Services",
     "home": "Home",
-    "newsletter":"News Letter",
+    "newsletter": "News Letter",
     "settings": "Settings",
     "profile": "Profile",
     "password": "Password",
@@ -278,17 +278,26 @@
     "send": "Send",
     "success": "Password reset link sent"
   },
-   "newsletter":{
-    "pageTitle":"Newsletter Subscribers",
-     "sendLetter":"Send Letter",
-     "noSubscribersFound":"No subscribers found",
-     "deleteConfirm":"Are you sure you want to delete this subscriber?",
-     "deleteSuccess":"Subscriber deleted successfully",
-     "email":"Email",
-     "joined":"Joined",
-     "noSubscribers":"No subscribers",
-     "action":"Action",
-     "searchPlaceholder":"Enter email"
+  "newsletter": {
+    "pageTitle": "Newsletter Subscribers",
+    "sendLetter": "Send Letter",
+    "noSubscribersFound": "No subscribers found",
+    "deleteConfirm": "Are you sure you want to delete this subscriber?",
+    "deleteSuccess": "Subscriber deleted successfully",
+    "email": "Email",
+    "joined": "Joined",
+    "noSubscribers": "No subscribers",
+    "action": "Action",
+    "searchPlaceholder": "Enter email"
+  },
+  "sendLetter": {
+    "pageTitle": "Send Newsletter",
+    "subject": "Subject",
+    "body": "Body",
+    "send": "Send",
+    "sending": "Sending",
+    "sendSuccess": "Sent successfully",
+    "noSubscribers": "There are no subscribers to send the newsletter to."
   },
   "common": {
     "langSelect": "Select Content Language",
