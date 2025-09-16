@@ -91,7 +91,10 @@
     "updated": "Partner updated successfully!",
     "deleted": "Partner deleted successfully!",
     "error": "Something went wrong. Please try again.",
-    "confirmDelete": "Are you sure you want to delete this partner?"
+    "confirmDelete": "Are you sure you want to delete this partner?",
+    "headline": "Headline",
+    "copy": "Copy",
+    "partners": "Partners"
   },
   "faq": {
     "pageTitle": "Frequently asked questions",
@@ -267,12 +270,12 @@
     "notAdmin": "You are not an admin.",
     "verifyEmail": "Verify your email to continue"
   },
-  "forgotPassword":{
-     "pageTitle": "Forgot Password",
-      "subtitle": "A password reset link will be sent to the email",
-      "emailPlaceholder": "Email",
-      "send": "Send",
-      "success":"Password reset link sent"
+  "forgotPassword": {
+    "pageTitle": "Forgot Password",
+    "subtitle": "A password reset link will be sent to the email",
+    "emailPlaceholder": "Email",
+    "send": "Send",
+    "success": "Password reset link sent"
   },
   "common": {
     "langSelect": "Select Content Language",

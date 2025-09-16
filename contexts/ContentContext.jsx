@@ -9,7 +9,11 @@ const ContentContext = createContext();
 export const useContent = () => useContext(ContentContext);
 
 export const ContentProvider = ({ children }) => {
-  const [partners, setPartners] = useState([]);
+  const [partnersContent, setPartnersContent] = useState({
+      headline: { en: "", ar: "" },
+      copy: { en: "", ar: "" },
+      partners: [],
+    });
   const [partnersLoading, setPartnersLoading] = useState(true);
   const [faq, setFaq] = useState({ headline: { en: "", ar: "" }, faqs: [] });
   const [faqLoading, setFaqLoading] = useState(true);
@@ -147,10 +151,8 @@ export const ContentProvider = ({ children }) => {
       (snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.data();
-          setPartners(data.partners || []);
-        } else {
-          setPartners([]);
-        }
+          setPartnersContent(data);
+        } 
         setPartnersLoading(false);
       },
       (error) => {
@@ -381,8 +383,7 @@ export const ContentProvider = ({ children }) => {
   return (
     <ContentContext.Provider
       value={{
-        partners,
-        setPartners,
+        partnersContent,
         partnersLoading,
         faq,
         faqLoading,

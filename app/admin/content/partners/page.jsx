@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/configuration/firebase-config";
 import { toast } from "react-toastify";
@@ -12,14 +12,16 @@ export default function TrustedPartners() {
   const locale = useLocale();
   const t = useTranslations("partnersPage");
   const c = useTranslations("common");
-  const { partners, partnersLoading: loading } = useContent();
-
+  const { partnersContent, partnersLoading: loading } = useContent();
+  const [headline, setHeadline] = useState({ en: "", ar: "" });
+  const [copy, setCopy] = useState({ en: "", ar: "" });
   const [showModal, setShowModal] = useState(false);
   const [editingPartner, setEditingPartner] = useState(null);
   const [formData, setFormData] = useState({ name: "", logo: "" });
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [deletingIds, setDeletingIds] = useState([]);
+  const [activeLang, setActiveLang] = useState(locale || "en");
 
   const handleShowModal = (partner = null) => {
     if (partner) {
@@ -31,6 +33,19 @@ export default function TrustedPartners() {
       setFile(null);
     }
     setShowModal(true);
+  };
+
+  const handleSaveToFirestore = async () => {
+    try {
+      await updateDoc(doc(db, "content", "partners"), {
+        headline,
+        copy,
+      });
+      toast.success(c("saveSuccess"));
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to save");
+    }
   };
 
   const handleSave = async () => {
@@ -117,6 +132,11 @@ export default function TrustedPartners() {
     }
   };
 
+  useEffect(() => {
+    setHeadline(partnersContent.headline);
+    setCopy(partnersContent.copy);
+  }, [partnersContent]);
+
   return (
     <div
       style={{
@@ -126,8 +146,51 @@ export default function TrustedPartners() {
         border: "1px solid rgba(227, 227, 227, 1)",
       }}
     >
-      <div className="d-flex justify-content-between align-items-start mb-5">
+      <div className="d-flex justify-content-between align-items-center mb-4">
         <h4>{t("pageTitle")}</h4>
+        <select
+          className="form-select w-auto"
+          value={activeLang}
+          onChange={(e) => setActiveLang(e.target.value)}
+        >
+          <option value="en">English</option>
+          <option value="ar">العربية</option>
+        </select>
+      </div>
+
+      <div className="mb-3">
+        <label className="form-label">{t("headline")}</label>
+        <input
+          className="form-control"
+          value={headline[activeLang]}
+          onChange={(e) =>
+            setHeadline((prev) => ({ ...prev, [activeLang]: e.target.value }))
+          }
+          dir={activeLang === "ar" ? "rtl" : "ltr"}
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">{t("copy")}</label>
+        <textarea
+          className="form-control"
+          rows={3}
+          value={copy[activeLang]}
+          onChange={(e) =>
+            setCopy((prev) => ({ ...prev, [activeLang]: e.target.value }))
+          }
+          dir={activeLang === "ar" ? "rtl" : "ltr"}
+        />
+      </div>
+      <button
+        className="btn btn-success mb-5"
+        onClick={handleSaveToFirestore}
+        disabled={loading}
+      >
+        {loading ? c("saving") : c("save")}
+      </button>
+
+      <div className="d-flex justify-content-between align-items-start mb-5">
+        <h4>{t("partners")}</h4>
         <div
           className="primaryButton"
           style={{ borderRadius: "12px" }}
@@ -143,14 +206,14 @@ export default function TrustedPartners() {
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
-      ) : partners.length === 0 ? (
+      ) : partnersContent.partners.length === 0 ? (
         <h5 className="text-center my-5">{t("noPartners")}</h5>
       ) : (
         <div
           className="d-flex flex-wrap justify-content-start gap-3"
           style={{ marginTop: "16px" }}
         >
-          {partners.map((partner) => (
+          {partnersContent.partners.map((partner) => (
             <div key={partner.id} style={{ flex: "0 1 220px" }}>
               <div
                 className="card h-100 text-center shadow-sm"
