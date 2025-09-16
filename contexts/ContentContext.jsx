@@ -147,6 +147,11 @@ export const ContentProvider = ({ children }) => {
     subscriberTimestamps: {},
   });
   const [newsLetterLoading, setNewsLetterLoading] = useState(true);
+  const [newsletterContent, setNewsletterContent] = useState({
+    headline: { en: "", ar: "" },
+    copy: { en: "", ar: "" },
+    buttonText: { en: "", ar: "" },
+  });
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -405,6 +410,27 @@ export const ContentProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const docRef = doc(db, "content", "newsletterContent");
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          setNewsletterContent(data);
+        }
+      },
+      (error) => {
+        console.error("Error fetching newsletter content:", error);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   return (
     <ContentContext.Provider
       value={{
@@ -424,6 +450,7 @@ export const ContentProvider = ({ children }) => {
         homeData,
         newsletter,
         newsLetterLoading,
+        newsletterContent,
       }}
     >
       {children}

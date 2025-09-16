@@ -15,7 +15,7 @@
     "technologies": "Technologies",
     "services": "Services",
     "home": "Home",
-    "newsletter": "News Letter",
+    "newsletter": "Newsletter",
     "settings": "Settings",
     "profile": "Profile",
     "password": "Password",
@@ -298,6 +298,12 @@
     "sending": "Sending",
     "sendSuccess": "Sent successfully",
     "noSubscribers": "There are no subscribers to send the newsletter to."
+  },
+  "newsletterContent": {
+    "pageTitle": "Newsletter Content",
+    "headline":"Headline",
+    "copy":"Copy",
+    "buttonText":"Button Text"
   },
   "common": {
     "langSelect": "Select Content Language",

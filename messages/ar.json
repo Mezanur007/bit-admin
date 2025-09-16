@@ -299,6 +299,12 @@
     "sendSuccess": "تم الإرسال بنجاح",
     "noSubscribers": "لا يوجد مشتركين لإرسال النشرة الإخبارية إليهم."
   },
+  "newsletterContent": {
+    "pageTitle": "محتوى النشرة الإخبارية",
+    "headline": "العنوان",
+    "copy": "النص",
+    "buttonText": "نص الزر"
+  },
   "common": {
     "langSelect": "اختر لغة المحتوى",
     "add": "إضافة",

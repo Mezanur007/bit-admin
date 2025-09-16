@@ -117,6 +117,10 @@ export default function AdminAccount({ children }) {
       key: "home",
       url: "/admin/content/home",
     },
+    {
+      key: "newsletter",
+      url: "/admin/content/newsletter",
+    },
   ];
 
   useEffect(() => {
