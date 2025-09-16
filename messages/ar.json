@@ -15,6 +15,7 @@
     "technologies": "التقنيات",
     "services": "الخدمات",
     "home": "الرئيسية",
+    "newsletter": "النشرة الإخبارية",
     "settings": "الإعدادات",
     "profile": "الملف الشخصي",
     "password": "كلمة المرور",
@@ -276,6 +277,18 @@
     "emailPlaceholder": "البريد الإلكتروني",
     "send": "إرسال",
     "success": "تم إرسال رابط إعادة تعيين كلمة المرور إلى"
+  },
+  "newsletter": {
+    "pageTitle": "مشتركو النشرة الإخبارية",
+    "sendLetter": "إرسال النشرة الإخبارية",
+    "noSubscribersFound": "لم يتم العثور على مشتركين",
+    "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذا المشترك؟",
+    "deleteSuccess": "تم حذف المشترك بنجاح",
+    "email": "البريد الإلكتروني",
+    "joined": "تاريخ الانضمام",
+    "noSubscribers": "لا يوجد مشتركين",
+    "action": "إجراء",
+    "searchPlaceholder": "أدخل البريد الإلكتروني"
   },
   "common": {
     "langSelect": "اختر لغة المحتوى",

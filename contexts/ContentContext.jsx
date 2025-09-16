@@ -10,10 +10,10 @@ export const useContent = () => useContext(ContentContext);
 
 export const ContentProvider = ({ children }) => {
   const [partnersContent, setPartnersContent] = useState({
-      headline: { en: "", ar: "" },
-      copy: { en: "", ar: "" },
-      partners: [],
-    });
+    headline: { en: "", ar: "" },
+    copy: { en: "", ar: "" },
+    partners: [],
+  });
   const [partnersLoading, setPartnersLoading] = useState(true);
   const [faq, setFaq] = useState({ headline: { en: "", ar: "" }, faqs: [] });
   const [faqLoading, setFaqLoading] = useState(true);
@@ -142,6 +142,11 @@ export const ContentProvider = ({ children }) => {
       services: [],
     },
   });
+  const [newsletter, setNewsletter] = useState({
+    subscribers: [],
+    subscriberTimestamps: {},
+  });
+  const [newsLetterLoading, setNewsLetterLoading] = useState(true);
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -152,7 +157,7 @@ export const ContentProvider = ({ children }) => {
         if (snapshot.exists()) {
           const data = snapshot.data();
           setPartnersContent(data);
-        } 
+        }
         setPartnersLoading(false);
       },
       (error) => {
@@ -380,6 +385,26 @@ export const ContentProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const docRef = doc(db, "content", "subscribers");
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          setNewsletter(docSnap.data());
+        }
+        setNewsLetterLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching newsletter data:", error);
+        setNewsLetterLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <ContentContext.Provider
       value={{
@@ -397,6 +422,8 @@ export const ContentProvider = ({ children }) => {
         serviceContent,
         serviceLoading,
         homeData,
+        newsletter,
+        newsLetterLoading,
       }}
     >
       {children}

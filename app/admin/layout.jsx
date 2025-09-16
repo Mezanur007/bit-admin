@@ -17,6 +17,7 @@ import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import { DescriptionOutlined } from "@mui/icons-material";
+import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
 
 import Loading from "@/components/Loading";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -58,6 +59,11 @@ export default function AdminAccount({ children }) {
       url: "/admin/messages",
       icon: <MessageOutlinedIcon />,
       badgeKey: "unreadMessages",
+    },
+    {
+      key: "newsletter",
+      url: "/admin/newsletter",
+      icon: <MailOutlineOutlinedIcon />,
     },
     {
       key: "admins",
