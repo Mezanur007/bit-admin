@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import Resend from "resend";
+import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -24,10 +24,18 @@ export async function POST(req) {
         batch.map(async (email) => {
           try {
             await resend.emails.send({
-              from: "info@b-it.co",
+              from: "B-IT <info@b-it.co>",
               to: email,
               subject,
-              html: body,
+              html: `
+                    ${body}
+                    <p style="font-size:14px; color:#555; margin-top:20px;">
+                    Don’t want to hear from us anymore? 
+                    <a href="https://b-it.co/unsubscribe?email=${encodeURIComponent(
+                      email
+                    )}" style="color:#0066cc;">Unsubscribe</a>
+                    </p>
+                `,
             });
           } catch (err) {
             console.error(`Failed to send to ${email}:`, err);
