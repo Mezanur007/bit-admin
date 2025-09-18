@@ -152,6 +152,11 @@ export const ContentProvider = ({ children }) => {
     copy: { en: "", ar: "" },
     buttonText: { en: "", ar: "" },
   });
+  const [galleryLoading, setGalleryLoading] = useState(true);
+  const [gallery, setGallery] = useState({
+    categories: [],
+    items: [],
+  });
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -431,6 +436,26 @@ export const ContentProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const docRef = doc(db, "content", "gallery");
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          setGallery(docSnap.data());
+        }
+        setGalleryLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching gallery data:", error);
+        setGalleryLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <ContentContext.Provider
       value={{
@@ -451,6 +476,8 @@ export const ContentProvider = ({ children }) => {
         newsletter,
         newsLetterLoading,
         newsletterContent,
+        gallery,
+        galleryLoading,
       }}
     >
       {children}
