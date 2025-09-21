@@ -1,6 +1,6 @@
 "use client";
-import React, {  useState } from "react";
-import { useArticles } from "@/contexts/ArticlesContext";
+import React, { useState } from "react";
+import { useContent } from "@/contexts/ContentContext";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/configuration/firebase-config";
 import { toast } from "react-toastify";
@@ -8,14 +8,14 @@ import { useRouter } from "next/navigation";
 import Pagination from "@mui/material/Pagination";
 import usePagination from "@/hooks/UsePagination";
 import Link from "next/link";
-import { FaEye, FaTrash, FaPencilAlt } from "react-icons/fa";
+import { FaTrash, FaPencilAlt } from "react-icons/fa";
 import { useLocale, useTranslations } from "next-intl";
 
-export default function Articles() {
-  const { articles, loading } = useArticles();
+export default function Events() {
+  const { events, eventsLoading: loading } = useContent();
   const locale = useLocale();
   const router = useRouter();
-  const t = useTranslations("articlesPage");
+  const t = useTranslations("events");
   const c = useTranslations("common");
   const [deletingIds, setDeletingIds] = useState([]);
 
@@ -26,35 +26,31 @@ export default function Articles() {
     currentPageIndex,
     setcurrentPageIndex,
     displayPage,
-  } = usePagination(20, articles.length);
+  } = usePagination(20, events.length);
 
-  const currentArticles = articles.slice(startPageIndex, endPageIndex);
+  const currentEvents = events.slice(startPageIndex, endPageIndex);
 
-  const handleDelete = async (article) => {
+  const handleDelete = async (event) => {
     if (!window.confirm(c("confirmDelete"))) return;
-    setDeletingIds((prev) => [...prev, article.id]);
+    setDeletingIds((prev) => [...prev, event.id]);
     try {
-      const resImg = await fetch(`/api/image`, {
+      await fetch("/api/delete-folder", {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          bucket: "bit-blog-images",
-          path: article.storageId,
+          bucket: "bit-content-images",
+          folder: `content/events/event-${event.id}/`,
         }),
       });
 
-      if (!resImg.ok) throw new Error("Failed to delete image");
-
-      await deleteDoc(doc(db, "articles", article.id));
+      await deleteDoc(doc(db, "events", event.id));
 
       toast.success(c("deleteSuccess"));
     } catch (error) {
-      console.error("Failed to delete article:", error);
+      console.error("Failed to delete event:", error);
       toast.error(c("deletedFail"));
     } finally {
-      setDeletingIds((prev) => prev.filter((id) => id !== article.id));
+      setDeletingIds((prev) => prev.filter((id) => id !== event.id));
     }
   };
 
@@ -72,7 +68,7 @@ export default function Articles() {
         <div
           className="primaryButton"
           style={{ borderRadius: "12px" }}
-          onClick={() => router.push(`/admin/add-article`)}
+          onClick={() => router.push(`/admin/add-event`)}
         >
           {t("add")}
         </div>
@@ -83,14 +79,14 @@ export default function Articles() {
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
-      ) : articles.length === 0 ? (
-        <h5 className="text-center my-5">{t("noArticles")}</h5>
+      ) : events.length === 0 ? (
+        <h5 className="text-center my-5">{t("noEvents")}</h5>
       ) : (
         <>
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xxl-4 g-4 mb-5">
-            {currentArticles.map((article) => {
+            {currentEvents.map((event) => {
               return (
-                <div className="col" key={article.id}>
+                <div className="col" key={event.id}>
                   <div className="card h-100 shadow-sm rounded-3 overflow-hidden">
                     <div
                       style={{
@@ -103,8 +99,8 @@ export default function Articles() {
                       className="card-img-top"
                     >
                       <img
-                        src={article.image}
-                        alt={article.title[locale]}
+                        src={event.banner.url}
+                        alt={event.title[locale]}
                         style={{
                           position: "absolute",
                           top: 0,
@@ -120,36 +116,15 @@ export default function Articles() {
                         className="mb-3 clamp-3 fw-semibold flex-grow-1"
                         style={{ fontWeight: "600" }}
                       >
-                        {article.title[locale]}
+                        {event.title[locale]}
                       </div>
                       <div className="d-flex">
-                        <a
-                          href={`https://b-it.co/en/article/${encodeURIComponent(
-                            article.slug
-                          )}`}
-                          rel="noopener noreferrer"
-                          target="_blank"
-                          className={`btn btn-primary ${
-                            locale === "en" ? "me-2" : "ms-2"
-                          }`}
-                          onClick={() =>
-                            router.push(
-                              `/article/${article.title["en"].replace(
-                                /\s+/g,
-                                "_"
-                              )}`
-                            )
-                          }
-                          title={c("view")}
-                        >
-                          <FaEye />
-                        </a>
                         <div
                           className={`btn btn-warning text-white ${
                             locale === "en" ? "me-2" : "ms-2"
                           }`}
                           onClick={() =>
-                            router.push(`/admin/edit-article/${article.id}`)
+                            router.push(`/admin/edit-event/${event.id}`)
                           }
                           title={c("edit")}
                         >
@@ -158,11 +133,11 @@ export default function Articles() {
                         <div
                           className="btn btn-danger"
                           style={{ backgroundColor: "red" }}
-                          onClick={() => handleDelete(article)}
+                          onClick={() => handleDelete(event)}
                           title={c("delete")}
-                          disabled={deletingIds.includes(article.id)}
+                          disabled={deletingIds.includes(event.id)}
                         >
-                          {deletingIds.includes(article.id) ? (
+                          {deletingIds.includes(event.id) ? (
                             <div
                               className="spinner-border spinner-border-sm text-light"
                               role="status"
@@ -182,7 +157,7 @@ export default function Articles() {
               );
             })}
           </div>
-          {articles.length > 20 && (
+          {events.length > 20 && (
             <div className="d-flex justify-content-center">
               <Pagination
                 count={totalPages}

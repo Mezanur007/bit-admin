@@ -157,6 +157,8 @@ export const ContentProvider = ({ children }) => {
     categories: [],
     items: [],
   });
+  const [events, setEvents] = useState([]);
+  const [eventsLoading, setEventsLoading] = useState(true);
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -456,6 +458,33 @@ export const ContentProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    let unsubscribe;
+
+    try {
+      unsubscribe = onSnapshot(
+        collection(db, "events"),
+        (snapshot) => {
+          const fetchedArticles = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          setEvents(fetchedArticles);
+          setEventsLoading(false);
+        },
+        (error) => {
+          console.error("Error fetching events:", error);
+        }
+      );
+    } catch (error) {
+      console.error("Failed to set up snapshot listener:", error);
+    }
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
+
   return (
     <ContentContext.Provider
       value={{
@@ -478,6 +507,8 @@ export const ContentProvider = ({ children }) => {
         newsletterContent,
         gallery,
         galleryLoading,
+        events,
+        eventsLoading
       }}
     >
       {children}
