@@ -17,6 +17,7 @@ export default function AddEvent() {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [event, setEvent] = useState({
     title: { en: "", ar: "" },
+    slug: "",
     description: { en: "", ar: "" },
     banner: null,
     gallery: [],
@@ -74,10 +75,14 @@ export default function AddEvent() {
   };
 
   const dataChange = (field, value) => {
-    setEvent((prev) => ({
-      ...prev,
-      [field]: { ...prev[field], [activeLang]: value },
-    }));
+    if (field === "slug") {
+      setEvent((prev) => ({ ...prev, slug: value }));
+    } else {
+      setEvent((prev) => ({
+        ...prev,
+        [field]: { ...prev[field], [activeLang]: value },
+      }));
+    }
   };
 
   const handleImageUpload = async (file, path) => {
@@ -127,6 +132,7 @@ export default function AddEvent() {
 
       await setDoc(docRef, {
         title: event.title,
+        slug: event.slug,
         description: event.description,
         banner: bannerData,
         gallery: galleryData,
@@ -135,6 +141,7 @@ export default function AddEvent() {
       toast.success(c("saveSuccess"));
       setEvent({
         title: { en: "", ar: "" },
+        slug: "",
         description: { en: "", ar: "" },
         banner: null,
         gallery: [],
@@ -162,9 +169,7 @@ export default function AddEvent() {
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="mb-3 d-flex align-items-center justify-content-between">
-          <label className="form-label mb-0">{t("title")}</label>
-        </div>
+        <label className="form-label mb-3">{t("title")}</label>
         <input
           type="text"
           className="form-control mb-3"
@@ -174,9 +179,16 @@ export default function AddEvent() {
           dir={activeLang === "en" ? "ltr" : "rtl"}
         />
 
-        <div className="mb-3 d-flex align-items-center justify-content-between">
-          <label className="form-label mb-0">{t("description")}</label>
-        </div>
+        <label className="form-label mb-3">{t("slug")}</label>
+        <input
+          type="text"
+          className="form-control mb-3"
+          value={event.slug}
+          onChange={(e) => dataChange("slug", e.target.value)}
+          required
+        />
+
+        <label className="form-label mb-3">{t("description")}</label>
         <textarea
           className="form-control mb-4"
           value={event.description[activeLang]}

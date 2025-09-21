@@ -39,6 +39,7 @@ export default function EditEvent() {
       if (foundEvent) {
         setEvent({
           title: foundEvent.title || { en: "", ar: "" },
+          slug: foundEvent.slug || "",
           description: foundEvent.description || { en: "", ar: "" },
           banner: foundEvent.banner || null,
           gallery: foundEvent.gallery || [],
@@ -101,10 +102,14 @@ export default function EditEvent() {
   };
 
   const dataChange = (field, value) => {
-    setEvent((prev) => ({
-      ...prev,
-      [field]: { ...prev[field], [activeLang]: value },
-    }));
+    if (field === "slug") {
+      setEvent((prev) => ({ ...prev, slug: value }));
+    } else {
+      setEvent((prev) => ({
+        ...prev,
+        [field]: { ...prev[field], [activeLang]: value },
+      }));
+    }
   };
 
   const handleImageUpload = async (file, path) => {
@@ -168,6 +173,7 @@ export default function EditEvent() {
 
       await updateDoc(docRef, {
         title: event.title,
+        slug: event.slug,
         description: event.description,
         banner: bannerData,
         gallery: galleryData,
@@ -207,6 +213,17 @@ export default function EditEvent() {
             onChange={(e) => dataChange("title", e.target.value)}
             required
             dir={activeLang === "en" ? "ltr" : "rtl"}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label mb-0">{t("slug")}</label>
+          <input
+            type="text"
+            className="form-control mb-3"
+            value={event.slug}
+            onChange={(e) => dataChange("slug", e.target.value)}
+            required
           />
         </div>
 

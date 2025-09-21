@@ -322,7 +322,8 @@
     "addPhoto": "Add Photo",
     "addVideo": "Add Video",
     "selectBanner": "Select Banner",
-    "addBanner": "Add a banner please"
+    "addBanner": "Add a banner please",
+    "slug":"Slug"
   },
   "events": {
     "pageTitle": "Events",
