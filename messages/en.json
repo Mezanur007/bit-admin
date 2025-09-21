@@ -322,12 +322,15 @@
     "addPhoto": "Add Photo",
     "addVideo": "Add Video",
     "selectBanner": "Select Banner",
-    "addBanner":"Add a banner please"
+    "addBanner": "Add a banner please"
   },
-  "events":{
-    "pageTitle":"Events",
-    "add":"Add Event",
-    "noEvents":"No events"
+  "events": {
+    "pageTitle": "Events",
+    "add": "Add Event",
+    "noEvents": "No events"
+  },
+  "editEvent": {
+    "pageTitle": "Edit Event"
   },
   "common": {
     "langSelect": "Select Content Language",
