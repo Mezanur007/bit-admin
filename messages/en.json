@@ -17,6 +17,7 @@
     "home": "Home",
     "newsletter": "Newsletter",
     "events": "Events",
+    "caseStudies": "Case Studies",
     "settings": "Settings",
     "profile": "Profile",
     "password": "Password",
@@ -323,7 +324,7 @@
     "addVideo": "Add Video",
     "selectBanner": "Select Banner",
     "addBanner": "Add a banner please",
-    "slug":"Slug"
+    "slug": "Slug"
   },
   "events": {
     "pageTitle": "Events",
@@ -332,6 +333,30 @@
   },
   "editEvent": {
     "pageTitle": "Edit Event"
+  },
+  "caseStudies": {
+    "pageTitle": "Case Studies",
+    "noStudies": "No case studies"
+  },
+  "addStudy": {
+    "title": "Title",
+    "service": "Service",
+    "slug": "Slug",
+    "description": "Description",
+    "tags": "Tags",
+    "banner": "Banner",
+    "selectBanner": "Select Banner",
+    "snaps": "Snaps",
+    "pageTitle": "Add Case Study",
+    "addBanner": "Add a banner please",
+    "addVideo": "Add Video",
+    "noTagsWarning": "Add at least one tag",
+    "videos": "Videos",
+    "applications":"Applications",
+    "features":"Features"
+  },
+  "editStudy":{
+    "pageTitle":"Edit Case Study"
   },
   "common": {
     "langSelect": "Select Content Language",

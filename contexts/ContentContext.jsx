@@ -159,6 +159,8 @@ export const ContentProvider = ({ children }) => {
   });
   const [events, setEvents] = useState([]);
   const [eventsLoading, setEventsLoading] = useState(true);
+  const [caseStudies, setCaseStudies] = useState([]);
+  const [caseStudiesLoading, setCaseStudiesLoading] = useState(true);
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -485,6 +487,33 @@ export const ContentProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    let unsubscribe;
+
+    try {
+      unsubscribe = onSnapshot(
+        collection(db, "case-studies"),
+        (snapshot) => {
+          const fetchedStudies = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          setCaseStudies(fetchedStudies);
+          setCaseStudiesLoading(false);
+        },
+        (error) => {
+          console.error("Error fetching case studies:", error);
+        }
+      );
+    } catch (error) {
+      console.error("Failed to set up snapshot listener:", error);
+    }
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
+
   return (
     <ContentContext.Provider
       value={{
@@ -508,7 +537,9 @@ export const ContentProvider = ({ children }) => {
         gallery,
         galleryLoading,
         events,
-        eventsLoading
+        eventsLoading,
+        caseStudies,
+        caseStudiesLoading,
       }}
     >
       {children}

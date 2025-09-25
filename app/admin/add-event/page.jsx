@@ -155,7 +155,14 @@ export default function AddEvent() {
   };
 
   return (
-    <div className="p-4 bg-white rounded-4 border">
+    <div
+      style={{
+        backgroundColor: "white",
+        padding: "16px",
+        borderRadius: "18px",
+        border: "1px solid rgba(227, 227, 227, 1)",
+      }}
+    >
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h4>{t("pageTitle")}</h4>
         <select

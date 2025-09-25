@@ -16,6 +16,7 @@
     "services": "الخدمات",
     "home": "الرئيسية",
     "newsletter": "النشرة الإخبارية",
+    "caseStudies": "دراسات الحالة",
     "events": "الفعاليات",
     "settings": "الإعدادات",
     "profile": "الملف الشخصي",
@@ -323,7 +324,27 @@
     "addVideo": "إضافة فيديو",
     "selectBanner": "اختر الصورة الرئيسية",
     "addBanner": "من فضلك أضف لافتة",
-    "slug":"الرابط الفريد"
+    "slug": "الرابط الفريد"
+  },
+  "addStudy": {
+    "title": "العنوان",
+    "service": "الخدمة",
+    "slug": "الرابط المختصر",
+    "description": "الوصف",
+    "tags": "الوسوم",
+    "banner": "البانر",
+    "selectBanner": "اختر البانر",
+    "snaps": "الصور",
+    "pageTitle": "إضافة دراسة حالة",
+    "addBanner": "يرجى إضافة بانر",
+    "addVideo": "إضافة فيديو",
+    "noTagsWarning": "أضف وسمًا واحدًا على الأقل",
+    "videos": "الفيديوهات",
+    "applications": "التطبيقات",
+    "features": "الميزات"
+  },
+  "editStudy": {
+    "pageTitle": "تعديل دراسة الحالة"
   },
   "common": {
     "langSelect": "اختر لغة المحتوى",
