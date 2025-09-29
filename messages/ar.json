@@ -326,6 +326,18 @@
     "addBanner": "من فضلك أضف لافتة",
     "slug": "الرابط الفريد"
   },
+  "events": {
+    "pageTitle": "الفعاليات",
+    "add": "إضافة فعالية",
+    "noEvents": "لا توجد فعاليات"
+  },
+  "editEvent": {
+    "pageTitle": "تعديل الفعالية"
+  },
+  "caseStudies": {
+    "pageTitle": "دراسات الحالة",
+    "noStudies": "لا توجد دراسات حالة"
+  },
   "addStudy": {
     "title": "العنوان",
     "service": "الخدمة",
