@@ -11,11 +11,11 @@ import Link from "next/link";
 import { FaTrash, FaPencilAlt } from "react-icons/fa";
 import { useLocale, useTranslations } from "next-intl";
 
-export default function QuarterlyAchievers() {
-  const { quarterly, quarterlyLoading: loading } = useContent();
+export default function MonthlyAchievers() {
+  const { monthly, monthlyLoading: loading } = useContent();
   const locale = useLocale();
   const router = useRouter();
-  const t = useTranslations("quarterly");
+  const t = useTranslations("monthly");
   const c = useTranslations("common");
   const [deletingIds, setDeletingIds] = useState([]);
 
@@ -26,9 +26,9 @@ export default function QuarterlyAchievers() {
     currentPageIndex,
     setcurrentPageIndex,
     displayPage,
-  } = usePagination(24, quarterly.length);
+  } = usePagination(24, monthly.length);
 
-  const currentRecords = quarterly.slice(startPageIndex, endPageIndex);
+  const currentRecords = monthly.slice(startPageIndex, endPageIndex);
 
   const handleDelete = async (record) => {
     if (!window.confirm(c("confirmDelete"))) return;
@@ -39,11 +39,11 @@ export default function QuarterlyAchievers() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           bucket: "bit-content-images",
-          folder: `achievers/quarterly/record-${record.id}/`,
+          folder: `achievers/monthly/record-${record.id}/`,
         }),
       });
 
-      await deleteDoc(doc(db, "quarterly-achievers", record.id));
+      await deleteDoc(doc(db, "monthly-achievers", record.id));
 
       toast.success(c("deleteSuccess"));
     } catch (error) {
@@ -68,7 +68,7 @@ export default function QuarterlyAchievers() {
         <div
           className="primaryButton"
           style={{ borderRadius: "12px" }}
-          onClick={() => router.push(`/admin/add-quarterly`)}
+          onClick={() => router.push(`/admin/add-monthly`)}
         >
           {c("add")}
         </div>
@@ -79,7 +79,7 @@ export default function QuarterlyAchievers() {
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
-      ) : quarterly.length === 0 ? (
+      ) : monthly.length === 0 ? (
         <h5 className="text-center my-5">{t("noAchievers")}</h5>
       ) : (
         <>
@@ -116,29 +116,16 @@ export default function QuarterlyAchievers() {
                       />
                     </div>
 
-                    <div className="d-flex justify-content-between text-muted mb-3 small">
-                      <div>
-                        {record.fromMonth
-                          ? new Date(record.fromMonth + "-01").toLocaleString(
-                              locale,
-                              {
-                                month: "long",
-                                year: "numeric",
-                              }
-                            )
-                          : ""}
-                      </div>
-                      <div>
-                        {record.toMonth
-                          ? new Date(record.toMonth + "-01").toLocaleString(
-                              locale,
-                              {
-                                month: "long",
-                                year: "numeric",
-                              }
-                            )
-                          : ""}
-                      </div>
+                    <div className="text-muted mb-3 small">
+                      {record.month
+                        ? new Date(record.month + "-01").toLocaleString(
+                            locale,
+                            {
+                              month: "long",
+                              year: "numeric",
+                            }
+                          )
+                        : ""}
                     </div>
 
                     <div className="d-flex flex-column gap-1">
@@ -175,7 +162,7 @@ export default function QuarterlyAchievers() {
                         <button
                           className={`btn btn-warning text-white flex-grow-1`}
                           onClick={() =>
-                            router.push(`/admin/edit-quarterly/${record.id}`)
+                            router.push(`/admin/edit-monthly/${record.id}`)
                           }
                           title={c("edit")}
                         >

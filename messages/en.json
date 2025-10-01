@@ -366,7 +366,8 @@
     "noAchievers": "No achievers"
   },
   "monthly": {
-    "pageTitle": "Monthly Achievers"
+    "pageTitle": "Monthly Achievers",
+    "noAchievers": "No achievers"
   },
   "addQuarterly": {
     "pageTitle": "Add Quarterly Achievers",
@@ -380,7 +381,12 @@
     "pageTitle": "Edit Quarterly Record"
   },
   "addMonthly": {
-    "pageTitle": "Add Monthly Achievers"
+    "pageTitle": "Add Monthly Achievers",
+    "month": "Month"
+  },
+  "editMonthly": {
+    "pageTitle": "Edit Monthly Record",
+    "month": "Month"
   },
   "common": {
     "langSelect": "Select Content Language",

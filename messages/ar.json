@@ -362,10 +362,12 @@
     "pageTitle": "تعديل دراسة الحالة"
   },
   "quarterly": {
-    "pageTitle": "المنجزون ربع السنويون"
+    "pageTitle": "المنجزون ربع السنويون",
+    "noAchievers": "لا يوجد مكرمون"
   },
   "monthly": {
-    "pageTitle": "المنجزون الشهريون"
+    "pageTitle": "المنجزون الشهريون",
+    "noAchievers": "لا يوجد مكرمون"
   },
   "addQuarterly": {
     "pageTitle": "إضافة المنجزين ربع السنويين",
@@ -379,7 +381,8 @@
     "pageTitle": "تعديل السجل ربع السنوي"
   },
   "addMonthly": {
-    "pageTitle": "إضافة المنجزين الشهريين"
+    "pageTitle": "إضافة المنجزين الشهريين",
+    "month": "شهر"
   },
   "common": {
     "langSelect": "اختر لغة المحتوى",
