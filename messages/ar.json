@@ -384,6 +384,10 @@
     "pageTitle": "إضافة المنجزين الشهريين",
     "month": "شهر"
   },
+  "editMonthly": {
+    "pageTitle": "تعديل السجل الشهري",
+    "month": "الشهر"
+  },
   "common": {
     "langSelect": "اختر لغة المحتوى",
     "add": "إضافة",
