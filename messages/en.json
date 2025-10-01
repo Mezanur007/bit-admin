@@ -2,6 +2,9 @@
   "layout": {
     "articles": "Articles",
     "messages": "Messages",
+    "achievers": "Achievers",
+    "monthly": "Monthly",
+    "quarterly": "Quarterly",
     "admins": "Admins",
     "content": "Content",
     "contactInfo": "Contact Info",
@@ -352,11 +355,32 @@
     "addVideo": "Add Video",
     "noTagsWarning": "Add at least one tag",
     "videos": "Videos",
-    "applications":"Applications",
-    "features":"Features"
+    "applications": "Applications",
+    "features": "Features"
   },
-  "editStudy":{
-    "pageTitle":"Edit Case Study"
+  "editStudy": {
+    "pageTitle": "Edit Case Study"
+  },
+  "quarterly": {
+    "pageTitle": "Quarterly Achievers",
+    "noAchievers": "No achievers"
+  },
+  "monthly": {
+    "pageTitle": "Monthly Achievers"
+  },
+  "addQuarterly": {
+    "pageTitle": "Add Quarterly Achievers",
+    "name": "Employee Name",
+    "designation": "Designation",
+    "description": "Short Description",
+    "fromMonth": "Start Month",
+    "toMonth": "End Month"
+  },
+  "editQuarterly": {
+    "pageTitle": "Edit Quarterly Record"
+  },
+  "addMonthly": {
+    "pageTitle": "Add Monthly Achievers"
   },
   "common": {
     "langSelect": "Select Content Language",
@@ -382,7 +406,12 @@
     "deleteSuccess": "Deleted successfully",
     "deleteFail": "Failed to delete",
     "cancel": "Cancel",
-    "addImage": "Please add an image.",
+    "addImage": "Please add an image",
+    "addBanner": "Please add a banner",
+    "banner": "Banner",
+    "selectBanner": "Select Banner",
+    "photo": "Photo",
+    "selectPhoto": "Select Photo",
     "slug": "Slug"
   }
 }

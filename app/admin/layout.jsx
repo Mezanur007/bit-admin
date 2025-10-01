@@ -20,6 +20,7 @@ import { DescriptionOutlined } from "@mui/icons-material";
 import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
 import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
+import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 
 import Loading from "@/components/Loading";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -31,6 +32,7 @@ export default function AdminAccount({ children }) {
   const pathName = usePathname();
   const { loading, user, isAdmin } = useAuth();
   const [showContentDropdown, setShowContentDropdown] = useState(false);
+  const [showAchievers, setShowAchievers] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -42,6 +44,10 @@ export default function AdminAccount({ children }) {
 
   const toggleContentDropdown = () => {
     setShowContentDropdown(!showContentDropdown);
+  };
+
+  const toggleAchieversDropdown = () => {
+    setShowAchievers(!showAchievers);
   };
 
   const t = useTranslations("layout");
@@ -132,6 +138,17 @@ export default function AdminAccount({ children }) {
     {
       key: "newsletter",
       url: "/admin/content/newsletter",
+    },
+  ];
+
+  const achieversSubPages = [
+    {
+      key: "quarterly",
+      url: "/admin/achievers/quarterly",
+    },
+    {
+      key: "monthly",
+      url: "/admin/achievers/monthly",
     },
   ];
 
@@ -246,6 +263,50 @@ export default function AdminAccount({ children }) {
                   </div>
                 );
               })}
+              <div
+                className={`${styles["account-nav-item"]} mb-1 mb-xl-2 cursor-pointer`}
+                onClick={toggleAchieversDropdown}
+              >
+                <EmojiEventsOutlinedIcon
+                  className={locale === "en" ? "me-3" : "ms-3"}
+                />
+                <h5 className="m-0 w-100">{t("achievers")}</h5>
+                {showAchievers === false ? (
+                  <ArrowDropDownSharpIcon />
+                ) : (
+                  <ArrowDropUpSharpIcon />
+                )}
+              </div>
+              <div>
+                {showAchievers && (
+                  <div
+                    style={{
+                      paddingLeft: locale === "en" ? "40px" : "",
+                      paddingRight: locale === "ar" ? "40px" : "",
+                    }}
+                  >
+                    {achieversSubPages.map(({ key, url }) => (
+                      <div
+                        key={key}
+                        data-bs-dismiss="offcanvas"
+                        data-bs-target="#offcanvasMenu"
+                      >
+                        <Link
+                          className={`${
+                            styles["account-nav-item"]
+                          } mb-1 mb-xl-2 ${
+                            pathName === url ? styles["active-route"] : ""
+                          }`}
+                          href={url}
+                          style={{ fontWeight: "500" }}
+                        >
+                          {t(key)}
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
 
               <div
                 className={`${styles["account-nav-item"]} mb-1 mb-xl-2 cursor-pointer`}

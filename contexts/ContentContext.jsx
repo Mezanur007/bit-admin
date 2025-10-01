@@ -161,6 +161,10 @@ export const ContentProvider = ({ children }) => {
   const [eventsLoading, setEventsLoading] = useState(true);
   const [caseStudies, setCaseStudies] = useState([]);
   const [caseStudiesLoading, setCaseStudiesLoading] = useState(true);
+  const [quarterly, setQuarterly] = useState([]);
+  const [quarterlyLoading, setQuarterlyLoading] = useState(true);
+  const [monthly, setMonthly] = useState([]);
+  const [monthlyLoading, setMonthlyLoading] = useState(true);
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -514,6 +518,60 @@ export const ContentProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    let unsubscribe;
+
+    try {
+      unsubscribe = onSnapshot(
+        collection(db, "quarterly-achievers"),
+        (snapshot) => {
+          const fetchedRecords = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          setQuarterly(fetchedRecords);
+          setQuarterlyLoading(false);
+        },
+        (error) => {
+          console.error("Error fetching quarterly achievers:", error);
+        }
+      );
+    } catch (error) {
+      console.error("Failed to set up snapshot listener:", error);
+    }
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    let unsubscribe;
+
+    try {
+      unsubscribe = onSnapshot(
+        collection(db, "monthly-achievers"),
+        (snapshot) => {
+          const fetchedRecords = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          setMonthly(fetchedRecords);
+          setMonthlyLoading(false);
+        },
+        (error) => {
+          console.error("Error fetching monthly achievers:", error);
+        }
+      );
+    } catch (error) {
+      console.error("Failed to set up snapshot listener:", error);
+    }
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
+
   return (
     <ContentContext.Provider
       value={{
@@ -540,6 +598,10 @@ export const ContentProvider = ({ children }) => {
         eventsLoading,
         caseStudies,
         caseStudiesLoading,
+        quarterly,
+        quarterlyLoading,
+        monthly,
+        monthlyLoading,
       }}
     >
       {children}

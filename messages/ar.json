@@ -2,6 +2,9 @@
   "layout": {
     "articles": "مقالات",
     "messages": "الرسائل",
+    "achievers": "المنجزون",
+    "monthly": "شهري",
+    "quarterly": "ربع سنوي",
     "admins": "المسؤولون",
     "content": "المحتوى",
     "contactInfo": "معلومات الاتصال",
@@ -358,6 +361,26 @@
   "editStudy": {
     "pageTitle": "تعديل دراسة الحالة"
   },
+  "quarterly": {
+    "pageTitle": "المنجزون ربع السنويون"
+  },
+  "monthly": {
+    "pageTitle": "المنجزون الشهريون"
+  },
+  "addQuarterly": {
+    "pageTitle": "إضافة المنجزين ربع السنويين",
+    "name": "اسم الموظف",
+    "designation": "المسمى الوظيفي",
+    "description": "وصف مختصر",
+    "fromMonth": "شهر البداية",
+    "toMonth": "شهر النهاية"
+  },
+  "editQuarterly": {
+    "pageTitle": "تعديل السجل ربع السنوي"
+  },
+  "addMonthly": {
+    "pageTitle": "إضافة المنجزين الشهريين"
+  },
   "common": {
     "langSelect": "اختر لغة المحتوى",
     "add": "إضافة",
@@ -383,6 +406,11 @@
     "deleteFail": "فشل الحذف",
     "cancel": "إلغاء",
     "addImage": "الرجاء إضافة صورة.",
+    "addBanner": "يرجى إضافة بانر",
+    "photo": "صورة",
+    "selectPhoto": "اختر صورة",
+    "banner": "بانر",
+    "selectBanner": "اختر بانر",
     "slug": "الرابط الفريد"
   }
 }
