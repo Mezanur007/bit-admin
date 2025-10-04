@@ -165,6 +165,10 @@ export const ContentProvider = ({ children }) => {
   const [quarterlyLoading, setQuarterlyLoading] = useState(true);
   const [monthly, setMonthly] = useState([]);
   const [monthlyLoading, setMonthlyLoading] = useState(true);
+  const [achieversContent, setAchieversContent] = useState({
+    headline: { en: "", ar: "" },
+    copy: { en: "", ar: "" },
+  });
 
   useEffect(() => {
     const docRef = doc(db, "content", "partners");
@@ -572,6 +576,27 @@ export const ContentProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const docRef = doc(db, "content", "achievers");
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          setAchieversContent(data);
+        }
+      },
+      (error) => {
+        console.error("Error fetching achievers content:", error);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   return (
     <ContentContext.Provider
       value={{
@@ -602,6 +627,7 @@ export const ContentProvider = ({ children }) => {
         quarterlyLoading,
         monthly,
         monthlyLoading,
+        achieversContent,
       }}
     >
       {children}

@@ -389,6 +389,11 @@
     "pageTitle": "Edit Monthly Record",
     "month": "Month"
   },
+  "achievers": {
+    "pageTitle": "Achievers Page",
+    "headline": "Headline",
+    "copy": "Copy"
+  },
   "common": {
     "langSelect": "Select Content Language",
     "add": "Add",

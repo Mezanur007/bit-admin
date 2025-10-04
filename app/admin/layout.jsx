@@ -139,6 +139,10 @@ export default function AdminAccount({ children }) {
       key: "newsletter",
       url: "/admin/content/newsletter",
     },
+    {
+      key: "achievers",
+      url: "/admin/content/achievers",
+    },
   ];
 
   const achieversSubPages = [

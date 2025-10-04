@@ -389,6 +389,11 @@
     "pageTitle": "تعديل السجل الشهري",
     "month": "الشهر"
   },
+  "achievers": {
+    "pageTitle": "صفحة المتفوقين",
+    "headline": "العنوان",
+    "copy": "النص"
+  },
   "common": {
     "langSelect": "اختر لغة المحتوى",
     "add": "إضافة",

@@ -7,11 +7,11 @@ import { toast } from "react-toastify";
 import { useTranslations, useLocale } from "next-intl";
 import { useContent } from "@/contexts/ContentContext";
 
-export default function Technologies() {
+export default function Achievers() {
   const locale = useLocale();
-  const t = useTranslations("technologies");
+  const t = useTranslations("achievers");
   const c = useTranslations("common");
-  const { techContent } = useContent();
+  const { achieversContent } = useContent();
   const [headline, setHeadline] = useState({ en: "", ar: "" });
   const [copy, setCopy] = useState({ en: "", ar: "" });
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ export default function Technologies() {
   const handleSaveToFirestore = async () => {
     try {
       setLoading(true);
-      await updateDoc(doc(db, "content", "technologies"), {
+      await updateDoc(doc(db, "content", "achievers"), {
         headline,
         copy,
       });
@@ -34,9 +34,9 @@ export default function Technologies() {
   };
 
   useEffect(() => {
-    setHeadline(techContent.headline);
-    setCopy(techContent.copy);
-  }, [techContent]);
+    setHeadline(achieversContent.headline);
+    setCopy(achieversContent.copy);
+  }, [achieversContent]);
 
   return (
     <div
