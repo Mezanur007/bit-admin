@@ -19,7 +19,8 @@ export async function POST(req) {
         Bucket: bucket,
         Key: path,
         Body: arrayBuffer,
-        ContentType: file.type,
+        ContentType: file.type || "image/gif",
+        CacheControl: "no-cache, no-store, must-revalidate",
       })
     );
 

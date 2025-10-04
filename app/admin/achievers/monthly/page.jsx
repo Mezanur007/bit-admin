@@ -127,7 +127,7 @@ export default function MonthlyAchievers() {
                         <button
                           className="btn btn-warning text-white flex-fill"
                           onClick={() =>
-                            router.push(`/admin/edit-quarterly/${a.id}`)
+                            router.push(`/admin/edit-monthly/${a.id}`)
                           }
                           title={c("edit")}
                         >
