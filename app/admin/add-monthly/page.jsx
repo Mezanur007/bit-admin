@@ -19,6 +19,7 @@ export default function AddMonthly() {
   const [newRecord, setNewRecord] = useState({
     name: { en: "", ar: "" },
     designation: { en: "", ar: "" },
+    achievement: { en: "", ar: "" },
     description: { en: "", ar: "" },
     image: null,
     month: "",
@@ -92,6 +93,7 @@ export default function AddMonthly() {
       setNewRecord({
         name: { en: "", ar: "" },
         designation: { en: "", ar: "" },
+        achievement: { en: "", ar: "" },
         description: { en: "", ar: "" },
         image: null,
         month: "",
@@ -153,6 +155,21 @@ export default function AddMonthly() {
             className="form-control"
             value={newRecord.designation[activeLang]}
             onChange={(e) => dataChange("designation", e.target.value)}
+            required
+            dir={activeLang === "ar" ? "rtl" : "ltr"}
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="achAchievement" className="form-label">
+            {t("achievement")}
+          </label>
+          <input
+            id="achAchievement"
+            type="text"
+            className="form-control"
+            value={newRecord.achievement[activeLang]}
+            onChange={(e) => dataChange("achievement", e.target.value)}
             required
             dir={activeLang === "ar" ? "rtl" : "ltr"}
           />

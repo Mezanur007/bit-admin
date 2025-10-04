@@ -375,7 +375,8 @@
     "designation": "Designation",
     "description": "Short Description",
     "fromMonth": "Start Month",
-    "toMonth": "End Month"
+    "toMonth": "End Month",
+    "achievement": "Achievement"
   },
   "editQuarterly": {
     "pageTitle": "Edit Quarterly Record"

@@ -375,7 +375,8 @@
     "designation": "المسمى الوظيفي",
     "description": "وصف مختصر",
     "fromMonth": "شهر البداية",
-    "toMonth": "شهر النهاية"
+    "toMonth": "شهر النهاية",
+    "achievement": "إنجاز"
   },
   "editQuarterly": {
     "pageTitle": "تعديل السجل ربع السنوي"

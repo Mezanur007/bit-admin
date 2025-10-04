@@ -54,6 +54,11 @@ export default function MonthlyAchievers() {
     }
   };
 
+  const formatMonth = (monthStr) => {
+    const date = new Date(monthStr + "-01");
+    return date.toLocaleString(locale, { month: "long", year: "numeric" });
+  };
+
   return (
     <div
       style={{
@@ -84,97 +89,57 @@ export default function MonthlyAchievers() {
       ) : (
         <>
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xxl-4 g-4 mb-5">
-            {currentRecords.map((record) => {
+            {currentRecords.map((a) => {
               return (
-                <div className="col" key={record.id}>
+                <div className="col" key={a.id}>
                   <div
-                    className="card h-100 shadow-lg overflow-hidden p-3 transition-transform hover:scale-105"
-                    style={{ borderRadius: "18px", backgroundColor: "#ffffff" }}
+                    key={a.id}
+                    className="h-100 border border-1 p-3 d-flex flex-column"
+                    style={{ borderRadius: "18px" }}
                   >
-                    <div
-                      className="mb-3 position-relative w-full overflow-hidden"
-                      style={{
-                        aspectRatio: "1",
-                        borderRadius: "12px",
-                        backgroundColor: "#f0f0f0",
-                      }}
-                    >
+                    <div className="ratio ratio-1x1 bg-light mb-3">
                       <img
-                        src={record.image.url}
-                        alt={record.name[locale]}
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          transition: "transform 0.3s",
-                        }}
-                        className="hover:scale-110"
+                        src={a.image.url}
+                        alt={a.name[locale]}
+                        className="card-img-top"
+                        style={{ borderRadius: "12px", objectFit: "cover" }}
                         loading="lazy"
                       />
                     </div>
 
-                    <div className="text-muted mb-3 small">
-                      {record.month
-                        ? new Date(record.month + "-01").toLocaleString(
-                            locale,
-                            {
-                              month: "long",
-                              year: "numeric",
-                            }
-                          )
-                        : ""}
-                    </div>
-
-                    <div className="d-flex flex-column gap-1">
-                      <div
-                        className="fw-bold mb-1 text-truncate"
-                        style={{
-                          fontWeight: 600,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {record.name[locale]}
-                      </div>
-
-                      <div className="text-secondary small mb-2">
-                        {record.designation[locale]}
-                      </div>
-
-                      <div
-                        className="text-muted mb-3"
-                        style={{
-                          display: "-webkit-box",
-                          WebkitLineClamp: 3,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        {record.description[locale]}
-                      </div>
-
-                      <div className="d-flex gap-2">
+                    <div className="d-flex flex-column flex-grow-1">
+                      <p className="fw-semibold text-success small mb-1 text-truncate">
+                        🏆 {a.achievement[locale]}
+                      </p>
+                      <p className="text-muted fw-semibold small mb-2">
+                        📅 {formatMonth(a.month)}
+                      </p>
+                      <h5 className="card-title fw-bold text-truncate mb-1">
+                        {a.name[locale]}
+                      </h5>
+                      <p className="text-muted small mb-2 text-truncate">
+                        {a.designation[locale]}
+                      </p>
+                      <p className="text-secondary small flex-grow-1 mb-3 clamp-3">
+                        {a.description[locale]}
+                      </p>
+                      <div className="d-flex gap-2 mt-auto">
                         <button
-                          className={`btn btn-warning text-white flex-grow-1`}
+                          className="btn btn-warning text-white flex-fill"
                           onClick={() =>
-                            router.push(`/admin/edit-monthly/${record.id}`)
+                            router.push(`/admin/edit-quarterly/${a.id}`)
                           }
                           title={c("edit")}
                         >
                           <FaPencilAlt />
                         </button>
                         <button
-                          className="btn btn-danger flex-grow-1"
-                          onClick={() => handleDelete(record)}
+                          className="btn btn-danger flex-fill"
+                          onClick={() => handleDelete(a)}
                           title={c("delete")}
-                          disabled={deletingIds.includes(record.id)}
+                          disabled={deletingIds.includes(a.id)}
                         >
-                          {deletingIds.includes(record.id) ? (
+                          {deletingIds.includes(a.id) ? (
                             <div
                               className="spinner-border spinner-border-sm text-light"
                               role="status"
