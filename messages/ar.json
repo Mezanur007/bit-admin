@@ -394,6 +394,11 @@
     "headline": "العنوان",
     "copy": "النص"
   },
+  "caseStudiesPage": {
+    "pageTitle": "صفحة دراسات الحالة",
+    "headline": "العنوان الرئيسي",
+    "copy": "النص"
+  },
   "common": {
     "langSelect": "اختر لغة المحتوى",
     "add": "إضافة",

@@ -140,6 +140,10 @@ export default function AdminAccount({ children }) {
       url: "/admin/content/newsletter",
     },
     {
+      key: "caseStudies",
+      url: "/admin/content/case-studies",
+    },
+    {
       key: "achievers",
       url: "/admin/content/achievers",
     },

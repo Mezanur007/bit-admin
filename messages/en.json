@@ -394,6 +394,11 @@
     "headline": "Headline",
     "copy": "Copy"
   },
+  "caseStudiesPage": {
+    "pageTitle": "Case Studies Page",
+    "headline": "Headline",
+    "copy": "Copy"
+  },
   "common": {
     "langSelect": "Select Content Language",
     "add": "Add",
