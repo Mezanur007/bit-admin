@@ -119,6 +119,9 @@
     "copy": "النص",
     "content": "المحتوى"
   },
+  "privacy": {
+    "pageTitle": "سياسة الخصوصية"
+  },
   "aboutPage": {
     "pageTitle": "من نحن",
     "saveSuccess": "تم الحفظ بنجاح!",

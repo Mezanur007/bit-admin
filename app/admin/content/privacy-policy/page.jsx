@@ -15,6 +15,7 @@ const JoditEditor = dynamic(() => import("jodit-react"), {
 export default function PrivacyPolicy() {
   const locale = useLocale();
   const t = useTranslations("terms");
+  const p = useTranslations("privacy");
   const c = useTranslations("common");
   const { privacy } = useContent();
 
@@ -65,7 +66,7 @@ export default function PrivacyPolicy() {
       }}
     >
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h4>{t("pageTitle")}</h4>
+        <h4>{p("pageTitle")}</h4>
         <select
           className="form-select w-auto"
           value={activeLang}

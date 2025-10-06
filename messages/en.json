@@ -119,6 +119,9 @@
     "copy": "Copy",
     "content": "Content"
   },
+  "privacy": {
+    "pageTitle": "Privacy Policy"
+  },
   "aboutPage": {
     "pageTitle": "About Us",
     "saveSuccess": "Saved successfully!",
