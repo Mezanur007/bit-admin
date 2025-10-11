@@ -31,19 +31,15 @@ export default function MessagesPage() {
     currentPageIndex,
     setcurrentPageIndex,
     displayPage,
-  } = usePagination(20, messagesToDisplay);
+  } = usePagination(20, messagesToDisplay.length);
 
   messagesToDisplay.sort((a, b) => {
     const valueA = a[sortColumn.path];
     const valueB = b[sortColumn.path];
-    let comparison = 0;
-
-    if (sortColumn.path === "timestamp") {
-      comparison = new Date(valueA) - new Date(valueB);
-    } else {
-      comparison = String(valueA).localeCompare(String(valueB));
-    }
-
+    const comparison =
+      sortColumn.path === "timestamp"
+        ? valueA.toDate() - valueB.toDate()
+        : valueA.localeCompare(valueB);
     return sortColumn.order === "asc" ? comparison : -comparison;
   });
 
