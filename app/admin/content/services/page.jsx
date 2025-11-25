@@ -8,13 +8,17 @@ import { useTranslations, useLocale } from "next-intl";
 import { useContent } from "@/contexts/ContentContext";
 import { nanoid } from "nanoid";
 import { IoMdClose } from "react-icons/io";
-import { FaChevronUp, FaChevronDown } from "react-icons/fa6";
+import {
+  FaChevronUp,
+  FaChevronDown,
+} from "react-icons/fa6";
 
 export default function Services() {
   const locale = useLocale();
   const t = useTranslations("services");
   const c = useTranslations("common");
-  const { portfolio, serviceContent, serviceLoading } = useContent();
+  const { portfolio, serviceContent, serviceLoading } =
+    useContent();
   const [pageContent, setPageContent] = useState({
     headline: { en: "", ar: "" },
     copy: { en: "", ar: "" },
@@ -43,7 +47,9 @@ export default function Services() {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [activeLang, setActiveLang] = useState(locale || "en");
+  const [activeLang, setActiveLang] = useState(
+    locale || "en"
+  );
   const [deletedImages, setDeletedImages] = useState([]);
   const [openSections, setOpenSections] = useState({
     hero: false,
@@ -82,7 +88,12 @@ export default function Services() {
 
     setServices((prev) =>
       prev.map((s) =>
-        s.id === id ? { ...s, image: { ...s.image, file, url: previewUrl } } : s
+        s.id === id
+          ? {
+              ...s,
+              image: { ...s.image, file, url: previewUrl },
+            }
+          : s
       )
     );
   };
@@ -91,7 +102,10 @@ export default function Services() {
     setServices((prev) => {
       const serviceToDelete = prev.find((s) => s.id === id);
       if (serviceToDelete?.image?.path) {
-        setDeletedImages((imgs) => [...imgs, serviceToDelete.image.path]);
+        setDeletedImages((imgs) => [
+          ...imgs,
+          serviceToDelete.image.path,
+        ]);
       }
       return prev.filter((s) => s.id !== id);
     });
@@ -105,7 +119,10 @@ export default function Services() {
               ...s,
               [type]: [
                 ...s[type],
-                { id: nanoid(), headline: { en: "", ar: "" } },
+                {
+                  id: nanoid(),
+                  headline: { en: "", ar: "" },
+                },
               ],
             }
           : s
@@ -113,7 +130,13 @@ export default function Services() {
     );
   };
 
-  const handleUpdateItem = (serviceId, type, itemId, lang, value) => {
+  const handleUpdateItem = (
+    serviceId,
+    type,
+    itemId,
+    lang,
+    value
+  ) => {
     setServices((prev) =>
       prev.map((s) =>
         s.id === serviceId
@@ -121,7 +144,13 @@ export default function Services() {
               ...s,
               [type]: s[type].map((item) =>
                 item.id === itemId
-                  ? { ...item, headline: { ...item.headline, [lang]: value } }
+                  ? {
+                      ...item,
+                      headline: {
+                        ...item.headline,
+                        [lang]: value,
+                      },
+                    }
                   : item
               ),
             }
@@ -136,7 +165,9 @@ export default function Services() {
         s.id === serviceId
           ? {
               ...s,
-              [type]: s[type].filter((item) => item.id !== itemId),
+              [type]: s[type].filter(
+                (item) => item.id !== itemId
+              ),
             }
           : s
       )
@@ -157,7 +188,8 @@ export default function Services() {
               path,
             }),
           });
-          if (!resImg.ok) throw new Error("Failed to delete image");
+          if (!resImg.ok)
+            throw new Error("Failed to delete image");
         })
       );
 
@@ -166,19 +198,26 @@ export default function Services() {
           if (s.image.file) {
             const formData = new FormData();
             formData.append("file", s.image.file);
-            formData.append("path", `content/services/${s.id}`);
+            formData.append(
+              "path",
+              `content/services/${s.id}`
+            );
             formData.append("bucket", "bit-content-images");
 
             const res = await fetch("/api/image", {
               method: "POST",
               body: formData,
             });
-            if (!res.ok) throw new Error("Image upload failed");
+            if (!res.ok)
+              throw new Error("Image upload failed");
             const data = await res.json();
 
             return {
               ...s,
-              image: { url: data.url, path: `content/services/${s.id}` },
+              image: {
+                url: data.url,
+                path: `content/services/${s.id}`,
+              },
             };
           }
           return s;
@@ -245,27 +284,41 @@ export default function Services() {
       <div className="mb-4 border rounded">
         <div
           className="d-flex justify-content-between align-items-center p-2"
-          style={{ cursor: "pointer", backgroundColor: "#f7f7f7" }}
+          style={{
+            cursor: "pointer",
+            backgroundColor: "#f7f7f7",
+          }}
           onClick={() => toggleSection("hero")}
         >
           <h5 className="mb-0">{t("hero")}</h5>
-          {openSections.hero ? <FaChevronUp /> : <FaChevronDown />}
+          {openSections.hero ? (
+            <FaChevronUp />
+          ) : (
+            <FaChevronDown />
+          )}
         </div>
         {openSections.hero && (
           <div className="p-3">
-            <label className="form-label">{t("headline")}</label>
+            <label className="form-label">
+              {t("headline")}
+            </label>
             <input
               className="form-control mb-2"
               value={pageContent.headline[activeLang]}
               onChange={(e) =>
                 setPageContent((prev) => ({
                   ...prev,
-                  headline: { ...prev.headline, [activeLang]: e.target.value },
+                  headline: {
+                    ...prev.headline,
+                    [activeLang]: e.target.value,
+                  },
                 }))
               }
               dir={activeLang === "ar" ? "rtl" : "ltr"}
             />
-            <label className="form-label">{t("copy")}</label>
+            <label className="form-label">
+              {t("copy")}
+            </label>
             <textarea
               className="form-control"
               rows={3}
@@ -273,7 +326,10 @@ export default function Services() {
               onChange={(e) =>
                 setPageContent((prev) => ({
                   ...prev,
-                  copy: { ...prev.copy, [activeLang]: e.target.value },
+                  copy: {
+                    ...prev.copy,
+                    [activeLang]: e.target.value,
+                  },
                 }))
               }
               dir={activeLang === "ar" ? "rtl" : "ltr"}
@@ -285,18 +341,29 @@ export default function Services() {
       <div className="mb-4 border rounded">
         <div
           className="d-flex justify-content-between align-items-center p-2"
-          style={{ cursor: "pointer", backgroundColor: "#f7f7f7" }}
+          style={{
+            cursor: "pointer",
+            backgroundColor: "#f7f7f7",
+          }}
           onClick={() => toggleSection("services")}
         >
           <h5 className="mb-0">{t("services")}</h5>
-          {openSections.services ? <FaChevronUp /> : <FaChevronDown />}
+          {openSections.services ? (
+            <FaChevronUp />
+          ) : (
+            <FaChevronDown />
+          )}
         </div>
         {openSections.services && (
           <div className="p-3">
-            <label className="form-label">{t("featuresHeadline")}</label>
+            <label className="form-label">
+              {t("featuresHeadline")}
+            </label>
             <input
               className="form-control mb-2"
-              value={pageContent.featuresHeadline[activeLang]}
+              value={
+                pageContent.featuresHeadline[activeLang]
+              }
               onChange={(e) =>
                 setPageContent((prev) => ({
                   ...prev,
@@ -308,7 +375,9 @@ export default function Services() {
               }
               dir={activeLang === "ar" ? "rtl" : "ltr"}
             />
-            <label className="form-label">{t("featuresCopy")}</label>
+            <label className="form-label">
+              {t("featuresCopy")}
+            </label>
             <textarea
               className="form-control mb-2"
               rows={3}
@@ -324,10 +393,14 @@ export default function Services() {
               }
               dir={activeLang === "ar" ? "rtl" : "ltr"}
             />
-            <label className="form-label">{t("benefitsHeadline")}</label>
+            <label className="form-label">
+              {t("benefitsHeadline")}
+            </label>
             <input
               className="form-control mb-2"
-              value={pageContent.benefitsHeadline[activeLang]}
+              value={
+                pageContent.benefitsHeadline[activeLang]
+              }
               onChange={(e) =>
                 setPageContent((prev) => ({
                   ...prev,
@@ -339,7 +412,9 @@ export default function Services() {
               }
               dir={activeLang === "ar" ? "rtl" : "ltr"}
             />
-            <label className="form-label">{t("benefitsCopy")}</label>
+            <label className="form-label">
+              {t("benefitsCopy")}
+            </label>
             <textarea
               className="form-control mb-2"
               rows={3}
@@ -355,10 +430,14 @@ export default function Services() {
               }
               dir={activeLang === "ar" ? "rtl" : "ltr"}
             />
-            <label className="form-label">{t("processHeadline")}</label>
+            <label className="form-label">
+              {t("processHeadline")}
+            </label>
             <input
               className="form-control mb-2"
-              value={pageContent.processHeadline[activeLang]}
+              value={
+                pageContent.processHeadline[activeLang]
+              }
               onChange={(e) =>
                 setPageContent((prev) => ({
                   ...prev,
@@ -370,7 +449,9 @@ export default function Services() {
               }
               dir={activeLang === "ar" ? "rtl" : "ltr"}
             />
-            <label className="form-label">{t("processCopy")}</label>
+            <label className="form-label">
+              {t("processCopy")}
+            </label>
             <textarea
               className="form-control mb-2"
               rows={3}
@@ -388,23 +469,35 @@ export default function Services() {
             />
             {serviceLoading ? (
               <div className="d-flex justify-content-center align-items-center my-5">
-                <div className="spinner-border primary-color" role="status">
-                  <span className="visually-hidden">Loading...</span>
+                <div
+                  className="spinner-border primary-color"
+                  role="status"
+                >
+                  <span className="visually-hidden">
+                    Loading...
+                  </span>
                 </div>
               </div>
             ) : services.length === 0 ? (
-              <h5 className="text-center my-5">{t("noServices")}</h5>
+              <h5 className="text-center my-5">
+                {t("noServices")}
+              </h5>
             ) : (
               <>
                 {services.map((service, index) => (
-                  <div key={service.id} className="card p-3 mb-3">
+                  <div
+                    key={service.id}
+                    className="card p-3 mb-3"
+                  >
                     <div className="d-flex justify-content-between mb-3">
                       <h6 style={{ fontWeight: "600" }}>
                         {t("service")} {index + 1}
                       </h6>
                       <button
                         className="btn btn-sm btn-danger"
-                        onClick={() => handleDeleteService(service.id)}
+                        onClick={() =>
+                          handleDeleteService(service.id)
+                        }
                       >
                         {c("delete")}
                       </button>
@@ -421,27 +514,44 @@ export default function Services() {
                                   ...s,
                                   headline: {
                                     ...s.headline,
-                                    [activeLang]: e.target.value,
+                                    [activeLang]:
+                                      e.target.value,
                                   },
                                 }
                               : s
                           )
                         )
                       }
-                      dir={activeLang === "ar" ? "rtl" : "ltr"}
+                      dir={
+                        activeLang === "ar" ? "rtl" : "ltr"
+                      }
                     />
                     <input
                       className="form-control mb-2"
                       placeholder={c("slug")}
                       value={service.slug}
+                      // onChange={(e) => {
+                      //   const { value } = e.target;
+                      //   if (value.includes("-")) {
+                      //     setSlugError(c("noHyphens"));
+                      //     return;
+                      //   } else {
+                      //     setSlugError("");
+                      //   }
+                      //   setServices((prev) =>
+                      //     prev.map((s) =>
+                      //       s.id === service.id
+                      //         ? {
+                      //             ...s,
+                      //             slug: value,
+                      //           }
+                      //         : s
+                      //     )
+                      //   );
+                      // }}
                       onChange={(e) => {
                         const { value } = e.target;
-                        if (value.includes("-")) {
-                          setSlugError(c("noHyphens"));
-                          return;
-                        } else {
-                          setSlugError("");
-                        }
+                        setSlugError(""); 
                         setServices((prev) =>
                           prev.map((s) =>
                             s.id === service.id
@@ -453,7 +563,9 @@ export default function Services() {
                           )
                         );
                       }}
-                      dir={activeLang === "ar" ? "rtl" : "ltr"}
+                      dir={
+                        activeLang === "ar" ? "rtl" : "ltr"
+                      }
                     />
                     {slugError !== "" && (
                       <div className="form-text text-danger mb-2">
@@ -476,7 +588,9 @@ export default function Services() {
                         )
                       }
                     >
-                      <option value="">{t("selectCategory")}</option>
+                      <option value="">
+                        {t("selectCategory")}
+                      </option>
                       {portfolio.categories.map((cat) => (
                         <option key={cat.id} value={cat.id}>
                           {cat.title[activeLang]}
@@ -495,7 +609,8 @@ export default function Services() {
                                   ...s,
                                   copy: {
                                     ...s.copy,
-                                    [activeLang]: e.target.value,
+                                    [activeLang]:
+                                      e.target.value,
                                   },
                                 }
                               : s
@@ -503,39 +618,62 @@ export default function Services() {
                         )
                       }
                       rows={5}
-                      dir={activeLang === "ar" ? "rtl" : "ltr"}
+                      dir={
+                        activeLang === "ar" ? "rtl" : "ltr"
+                      }
                     />
                     {service.image.url && (
                       <img
                         src={service.image.url}
                         alt="preview"
-                        style={{ width: "100px", height: "auto" }}
+                        style={{
+                          width: "100px",
+                          height: "auto",
+                        }}
                         className="mb-2"
                       />
                     )}
                     <div className="mb-2">
                       <button
                         className="btn btn-outline-secondary"
-                        onClick={() => handleImageButtonClick(service.id)}
+                        onClick={() =>
+                          handleImageButtonClick(service.id)
+                        }
                       >
-                        {service.image?.url ? t("changeImage") : t("addImage")}
+                        {service.image?.url
+                          ? t("changeImage")
+                          : t("addImage")}
                       </button>
                       <input
                         type="file"
-                        ref={(el) => (fileInputRefs[service.id] = el)}
+                        ref={(el) =>
+                          (fileInputRefs[service.id] = el)
+                        }
                         style={{ display: "none" }}
                         onChange={(e) =>
-                          handleImageChange(service.id, e.target.files[0])
+                          handleImageChange(
+                            service.id,
+                            e.target.files[0]
+                          )
                         }
                       />
                     </div>
-                    {["features", "benefits", "process"].map((type) => (
+                    {[
+                      "features",
+                      "benefits",
+                      "process",
+                    ].map((type) => (
                       <div key={type} className="my-3">
                         <h6 className="d-flex justify-content-between align-items-center">
                           {t(type)}
                           <button
                             className="btn btn-sm btn-outline-primary"
-                            onClick={() => handleAddItem(service.id, type)}
+                            onClick={() =>
+                              handleAddItem(
+                                service.id,
+                                type
+                              )
+                            }
                           >
                             + {c("add")}
                           </button>
@@ -547,8 +685,12 @@ export default function Services() {
                           >
                             <input
                               className="form-control"
-                              placeholder={`${t("headline")} (${activeLang})`}
-                              value={item.headline[activeLang]}
+                              placeholder={`${t(
+                                "headline"
+                              )} (${activeLang})`}
+                              value={
+                                item.headline[activeLang]
+                              }
                               onChange={(e) =>
                                 handleUpdateItem(
                                   service.id,
@@ -558,12 +700,20 @@ export default function Services() {
                                   e.target.value
                                 )
                               }
-                              dir={activeLang === "ar" ? "rtl" : "ltr"}
+                              dir={
+                                activeLang === "ar"
+                                  ? "rtl"
+                                  : "ltr"
+                              }
                             />
                             <button
                               className="btn btn-sm btn-danger"
                               onClick={() =>
-                                handleDeleteItem(service.id, type, item.id)
+                                handleDeleteItem(
+                                  service.id,
+                                  type,
+                                  item.id
+                                )
                               }
                             >
                               <IoMdClose />
@@ -572,10 +722,15 @@ export default function Services() {
                         ))}
                       </div>
                     ))}
-                    <label className="form-label">{t("ctaHeadline")}</label>
+                    <label className="form-label">
+                      {t("ctaHeadline")}
+                    </label>
                     <input
                       className="form-control mb-2"
-                      value={service.ctaHeadline?.[activeLang] || ""}
+                      value={
+                        service.ctaHeadline?.[activeLang] ||
+                        ""
+                      }
                       onChange={(e) =>
                         setServices((prev) =>
                           prev.map((s) =>
@@ -584,21 +739,28 @@ export default function Services() {
                                   ...s,
                                   ctaHeadline: {
                                     ...s.ctaHeadline,
-                                    [activeLang]: e.target.value,
+                                    [activeLang]:
+                                      e.target.value,
                                   },
                                 }
                               : s
                           )
                         )
                       }
-                      dir={activeLang === "ar" ? "rtl" : "ltr"}
+                      dir={
+                        activeLang === "ar" ? "rtl" : "ltr"
+                      }
                     />
 
-                    <label className="form-label">{t("ctaCopy")}</label>
+                    <label className="form-label">
+                      {t("ctaCopy")}
+                    </label>
                     <textarea
                       className="form-control mb-2"
                       rows={3}
-                      value={service.ctaCopy?.[activeLang] || ""}
+                      value={
+                        service.ctaCopy?.[activeLang] || ""
+                      }
                       onChange={(e) =>
                         setServices((prev) =>
                           prev.map((s) =>
@@ -607,20 +769,29 @@ export default function Services() {
                                   ...s,
                                   ctaCopy: {
                                     ...s.ctaCopy,
-                                    [activeLang]: e.target.value,
+                                    [activeLang]:
+                                      e.target.value,
                                   },
                                 }
                               : s
                           )
                         )
                       }
-                      dir={activeLang === "ar" ? "rtl" : "ltr"}
+                      dir={
+                        activeLang === "ar" ? "rtl" : "ltr"
+                      }
                     />
 
-                    <label className="form-label">{t("ctaButtonText")}</label>
+                    <label className="form-label">
+                      {t("ctaButtonText")}
+                    </label>
                     <input
                       className="form-control"
-                      value={service.ctaButtonText?.[activeLang] || ""}
+                      value={
+                        service.ctaButtonText?.[
+                          activeLang
+                        ] || ""
+                      }
                       onChange={(e) =>
                         setServices((prev) =>
                           prev.map((s) =>
@@ -629,14 +800,17 @@ export default function Services() {
                                   ...s,
                                   ctaButtonText: {
                                     ...s.ctaButtonText,
-                                    [activeLang]: e.target.value,
+                                    [activeLang]:
+                                      e.target.value,
                                   },
                                 }
                               : s
                           )
                         )
                       }
-                      dir={activeLang === "ar" ? "rtl" : "ltr"}
+                      dir={
+                        activeLang === "ar" ? "rtl" : "ltr"
+                      }
                     />
                   </div>
                 ))}
