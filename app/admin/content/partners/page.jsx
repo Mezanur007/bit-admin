@@ -61,11 +61,90 @@ export default function TrustedPartners() {
     }
   };
 
+  // const handleSave = async () => {
+  //   if (!file && !editingPartner) {
+  //     toast.error(t("logoRequired"));
+  //     return;
+  //   }
+  //   try {
+  //     setUploading(true);
+  //     let partnerId = editingPartner
+  //       ? editingPartner.id
+  //       : nanoid();
+  //     let logoURL = editingPartner?.logo || "";
+
+  //     const path = `content/partners/${partnerId}`;
+  //     if (file) {
+  //       const formData = new FormData();
+  //       formData.append("file", file);
+  //       formData.append("path", path);
+  //       formData.append("bucket", "bit-content-images");
+
+  //       const res = await fetch("/api/image", {
+  //         method: "POST",
+  //         body: formData,
+  //       });
+
+  //       if (!res.ok) throw new Error("Image upload failed");
+
+  //       const data = await res.json();
+  //       logoURL = data.url;
+  //     }
+
+  //     const newPartner = {
+  //       id: partnerId,
+  //       name: formData.name,
+  //       logo: logoURL,
+  //       path,
+  //     };
+
+  //     // const updatedPartners = editingPartner
+  //     //   ? partners.map((p) => (p.id === partnerId ? newPartner : p))
+  //     //   : [...partners, newPartner];
+
+  //     // const partnersDocRef = doc(db, "content", "partners");
+  //     // await updateDoc(partnersDocRef, { partners: updatedPartners });
+  //     const updatedPartners = editingPartner
+  //       ? partnersContent.partners.map((p) =>
+  //           p.id === partnerId ? newPartner : p
+  //         )
+  //       : [...partnersContent.partners, newPartner];
+
+  //     const partnersDocRef = doc(db, "content", "partners");
+  //     await updateDoc(partnersDocRef, {
+  //       partners: updatedPartners,
+  //     });
+
+  //     toast.success(
+  //       editingPartner ? t("updated") : t("added")
+  //     );
+
+  //     setShowModal(false);
+  //     setFile(null);
+  //   } catch (err) {
+  //     console.error(err);
+  //     toast.error(t("error"));
+  //   } finally {
+  //     setUploading(false);
+  //   }
+  // };
+
   const handleSave = async () => {
     if (!file && !editingPartner) {
       toast.error(t("logoRequired"));
       return;
     }
+
+    if (
+      !partnersContent ||
+      !Array.isArray(partnersContent.partners)
+    ) {
+      toast.error(
+        "Partners data not loaded yet. Please try again."
+      );
+      return;
+    }
+
     try {
       setUploading(true);
       let partnerId = editingPartner
@@ -98,17 +177,11 @@ export default function TrustedPartners() {
         path,
       };
 
-      // const updatedPartners = editingPartner
-      //   ? partners.map((p) => (p.id === partnerId ? newPartner : p))
-      //   : [...partners, newPartner];
-
-      // const partnersDocRef = doc(db, "content", "partners");
-      // await updateDoc(partnersDocRef, { partners: updatedPartners });
       const updatedPartners = editingPartner
         ? partnersContent.partners.map((p) =>
             p.id === partnerId ? newPartner : p
           )
-        : [...partnersContent.partners, newPartner];
+        : [...(partnersContent.partners || []), newPartner];
 
       const partnersDocRef = doc(db, "content", "partners");
       await updateDoc(partnersDocRef, {
@@ -122,7 +195,7 @@ export default function TrustedPartners() {
       setShowModal(false);
       setFile(null);
     } catch (err) {
-      console.error(err);
+      console.error("Error in handleSave:", err);
       toast.error(t("error"));
     } finally {
       setUploading(false);
