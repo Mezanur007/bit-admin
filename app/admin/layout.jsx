@@ -21,9 +21,9 @@ import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
 import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
-
 import Loading from "@/components/Loading";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 
 export default function AdminAccount({ children }) {
   const locale = useLocale();
@@ -81,12 +81,17 @@ export default function AdminAccount({ children }) {
     {
       key: "newsletter",
       url: "/admin/newsletter",
-      icon: <MailOutlineOutlinedIcon />,
+      icon: <MailOutlineOutlinedIcon/>,
     },
     {
       key: "admins",
       url: "/admin/admins",
       icon: <SupervisorAccountIcon />,
+    },
+    {
+      key: "metadata",
+      url: "/admin/seo-metadata",
+      icon: <ManageSearchIcon />,
     },
   ];
 
