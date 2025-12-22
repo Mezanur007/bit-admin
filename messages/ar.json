@@ -25,7 +25,8 @@
     "profile": "الملف الشخصي",
     "password": "كلمة المرور",
     "email": "البريد الإلكتروني",
-    "signOut": "تسجيل الخروج"
+    "signOut": "تسجيل الخروج",
+    "metadata": "البيانات التعريفية"
   },
   "articlesPage": {
     "pageTitle": "المقالات",
@@ -433,5 +434,38 @@
     "banner": "بانر",
     "selectBanner": "اختر بانر",
     "slug": "الرابط الفريد"
-  }
+  },
+"metadata": {
+  "pageTitle": "مدير البيانات الوصفية لتحسين محركات البحث",
+  "description": "إدارة العناوين والأوصاف والكلمات المفتاحية لجميع الصفحات",
+  "addNew": "إضافة صفحة جديدة",
+  "allPages": "جميع الصفحات",
+  "searchPlaceholder": "البحث عن الصفحات...",
+  "noPages": "لم يتم العثور على صفحات",
+  "addFirst": "إضافة أول صفحة",
+  "editPage": "تعديل البيانات الوصفية للصفحة",
+  "addNewPage": "إضافة صفحة جديدة",
+  "pageId": "معرف الصفحة",
+  "pageIdPlaceholder": "مثال: design-services, home, about",
+  "pageIdHelp": "يجب أن يتطابق هذا مع رابط المسار الخاص بك",
+  "english": "English",
+  "arabic": "العربية",
+  "title": "العنوان",
+  "titlePlaceholder": "Page Title | Brand Name",
+  "descriptionEn": "الوصف",
+  "descriptionPlaceholder": "Brief description of the page content",
+  "keywords": "الكلمات المفتاحية",
+  "keywordsPlaceholder": "keyword1, keyword2, keyword3",
+  "charactersRecommended": "characters (recommended)",
+  "titleAr": "العنوان",
+  "titlePlaceholderAr": "عنوان الصفحة | اسم العلامة التجارية",
+  "descriptionAr": "الوصف",
+  "descriptionPlaceholderAr": "وصف مختصر لمحتوى الصفحة",
+  "keywordsAr": "الكلمات المفتاحية",
+  "keywordsPlaceholderAr": "كلمة مفتاحية 1، كلمة مفتاحية 2، كلمة مفتاحية 3",
+  "charactersRecommendedAr": "حرف (موصى به)",
+  "saveChanges": "حفظ التغييرات",
+  "saving": "جارٍ الحفظ..."
+}
+
 }

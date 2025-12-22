@@ -7,5 +7,5 @@ if (!admin.apps.length) {
     ),
   });
 }
-
+export const db = admin.firestore();
 export const authAdmin = admin.auth();
