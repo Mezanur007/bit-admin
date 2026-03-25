@@ -25,7 +25,8 @@
     "profile": "Profile",
     "password": "Password",
     "email": "Email",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "metadata":"Meta Data"
   },
   "articlesPage": {
     "pageTitle": "Articles",
@@ -433,5 +434,38 @@
     "photo": "Photo",
     "selectPhoto": "Select Photo",
     "slug": "Slug"
-  }
+  },
+  
+"metadata": {
+  "pageTitle": "SEO Metadata Manager",
+  "description": "Manage meta titles, descriptions, and keywords for all pages",
+  "addNew": "Add New Page",
+  "allPages": "All Pages",
+  "searchPlaceholder": "Search pages...",
+  "noPages": "No pages found",
+  "addFirst": "Add First Page",
+  "editPage": "Edit Page Metadata",
+  "addNewPage": "Add New Page",
+  "pageId": "Page ID",
+  "pageIdPlaceholder": "e.g., design-services, home, about",
+  "pageIdHelp": "This should match your route slug (e.g., /services/design-services → design-services)",
+  "english": "English",
+  "arabic": "العربية",
+  "title": "Title",
+  "titlePlaceholder": "Page Title | Brand Name",
+  "descriptionEn": "Description",
+  "descriptionPlaceholder": "Brief description of the page content",
+  "keywords": "Keywords",
+  "keywordsPlaceholder": "keyword1, keyword2, keyword3",
+  "charactersRecommended": "characters (recommended)",
+  "titleAr": "Title",
+  "titlePlaceholderAr": "عنوان الصفحة | اسم العلامة التجارية",
+  "descriptionAr": "Description",
+  "descriptionPlaceholderAr": "وصف مختصر لمحتوى الصفحة",
+  "keywordsAr": "Keywords",
+  "keywordsPlaceholderAr": "كلمة مفتاحية 1، كلمة مفتاحية 2، كلمة مفتاحية 3",
+  "charactersRecommendedAr": "حرف (موصى به)",
+  "saveChanges": "Save Changes",
+  "saving": "Saving..."
+}
 }
