@@ -6,8 +6,9 @@ const JoditEditor = dynamic(() => import("jodit-react"), {
   ssr: false,
   loading: () => <p>Loading editor...</p>,
 });
-import { db } from "@/configuration/firebase-config";
+import { db, storage } from "@/configuration/firebase-config";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { toast } from "react-toastify";
 import { useRouter, useParams } from "next/navigation";
 import { nanoid } from "nanoid";
@@ -26,7 +27,6 @@ export default function EditArticle() {
   const { articles } = useArticles();
   const [activeLang, setActiveLang] = useState(locale || "en");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [article, setArticle] = useState(null);
   const [newImage, setNewImage] = useState(null);
 
@@ -42,14 +42,6 @@ export default function EditArticle() {
   );
 
   const handleChange = (field, value) => {
-    if (field === "slug") {
-      if (value.includes("-")) {
-        setError(c("noHyphens"));
-        return;
-      } else {
-        setError("");
-      }
-    }
     if (["title", "description"].includes(field)) {
       setArticle((prev) => ({
         ...prev,
@@ -89,20 +81,9 @@ export default function EditArticle() {
       let imageUrl = article.image;
 
       if (newImage) {
-        const formData = new FormData();
-        formData.append("file", newImage);
-        formData.append("path", article.storageId);
-        formData.append("bucket", "bit-blog-images");
-
-        const res = await fetch("/api/image", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!res.ok) throw new Error("Image upload failed");
-
-        const data = await res.json();
-        imageUrl = data.url;
+        const imageRef = ref(storage, `articles/article-${article.storageId}`);
+        await uploadBytes(imageRef, newImage);
+        imageUrl = await getDownloadURL(imageRef);
       }
 
       const articleRef = doc(db, "articles", id);
@@ -223,7 +204,6 @@ export default function EditArticle() {
             onChange={(e) => handleChange("slug", e.target.value)}
             required
           />
-          {error !== "" && <div className="form-text text-danger">{error}</div>}
         </div>
         <div className="mb-5">
           <label className="form-label">{a("description")}</label>

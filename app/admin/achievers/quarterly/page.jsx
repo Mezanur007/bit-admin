@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useContent } from "@/contexts/ContentContext";
 import { deleteDoc, doc } from "firebase/firestore";
-import { db } from "@/configuration/firebase-config";
+import { db, storage } from "@/configuration/firebase-config";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Pagination from "@mui/material/Pagination";
@@ -10,6 +10,7 @@ import usePagination from "@/hooks/UsePagination";
 import Link from "next/link";
 import { FaTrash, FaPencilAlt } from "react-icons/fa";
 import { useLocale, useTranslations } from "next-intl";
+import { deleteObject, listAll, ref } from "firebase/storage";
 
 export default function QuarterlyAchievers() {
   const { quarterly, quarterlyLoading: loading } = useContent();
@@ -30,21 +31,25 @@ export default function QuarterlyAchievers() {
 
   const currentRecords = quarterly.slice(startPageIndex, endPageIndex);
 
+  const deleteFolderContent = async (listRef) => {
+    listAll(listRef)
+      .then((res) => {
+        res.items.forEach(async (itemRef) => {
+          await deleteObject(itemRef);
+        });
+      })
+      .catch((error) => {
+        console.log("error deleting the folder", error);
+      });
+  };
+
   const handleDelete = async (record) => {
     if (!window.confirm(c("confirmDelete"))) return;
     setDeletingIds((prev) => [...prev, record.id]);
     try {
-      await fetch("/api/delete-folder", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bucket: "bit-content-images",
-          folder: `achievers/quarterly/record-${record.id}/`,
-        }),
-      });
-
+      const folderRef = ref(storage, `achievers/quarterly/record-${record.id}`);
+      deleteFolderContent(folderRef);
       await deleteDoc(doc(db, "quarterly-achievers", record.id));
-
       toast.success(c("deleteSuccess"));
     } catch (error) {
       console.error("Failed to delete achiever recod:", error);

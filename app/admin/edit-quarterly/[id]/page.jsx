@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { db } from "@/configuration/firebase-config";
+import { db, storage } from "@/configuration/firebase-config";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
 import { useContent } from "@/contexts/ContentContext";
 import { toast } from "react-toastify";
@@ -70,15 +71,10 @@ export default function EditQuarterly() {
   };
 
   const handleImageUpload = async (file, path) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("path", path);
-    formData.append("bucket", "bit-content-images");
-
-    const res = await fetch("/api/image", { method: "POST", body: formData });
-    if (!res.ok) throw new Error("Image upload failed");
-    const data = await res.json();
-    return { url: data.url, path };
+    const fileRef = ref(storage, path);
+    await uploadBytes(fileRef, file);
+    const url = await getDownloadURL(fileRef);
+    return { url, path };
   };
 
   const handleSubmit = async (e) => {

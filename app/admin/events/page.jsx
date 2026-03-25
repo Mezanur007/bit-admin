@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import { useContent } from "@/contexts/ContentContext";
 import { deleteDoc, doc } from "firebase/firestore";
-import { db } from "@/configuration/firebase-config";
+import { db, storage } from "@/configuration/firebase-config";
+import { ref, deleteObject, listAll } from "firebase/storage";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Pagination from "@mui/material/Pagination";
@@ -30,18 +31,24 @@ export default function Events() {
 
   const currentEvents = events.slice(startPageIndex, endPageIndex);
 
+  const deleteFolderContent = async (listRef) => {
+    listAll(listRef)
+      .then((res) => {
+        res.items.forEach(async (itemRef) => {
+          await deleteObject(itemRef);
+        });
+      })
+      .catch((error) => {
+        console.log("error deleting the folder", error);
+      });
+  };
+
   const handleDelete = async (event) => {
     if (!window.confirm(c("confirmDelete"))) return;
     setDeletingIds((prev) => [...prev, event.id]);
     try {
-      await fetch("/api/delete-folder", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bucket: "bit-content-images",
-          folder: `content/events/event-${event.id}/`,
-        }),
-      });
+      const folderRef = ref(storage, `events/event-${event.id}`);
+      deleteFolderContent(folderRef);
 
       await deleteDoc(doc(db, "events", event.id));
 

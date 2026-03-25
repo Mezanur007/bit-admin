@@ -1,8 +1,14 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { db } from "@/configuration/firebase-config";
+import { db, storage } from "@/configuration/firebase-config";
 import { doc, updateDoc } from "firebase/firestore";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { toast } from "react-toastify";
 import { nanoid } from "nanoid";
 import { IoMdClose } from "react-icons/io";
@@ -113,15 +119,10 @@ export default function EditEvent() {
   };
 
   const handleImageUpload = async (file, path) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("path", path);
-    formData.append("bucket", "bit-content-images");
-
-    const res = await fetch("/api/image", { method: "POST", body: formData });
-    if (!res.ok) throw new Error("Image upload failed");
-    const data = await res.json();
-    return { url: data.url, path };
+    const fileRef = ref(storage, path);
+    await uploadBytes(fileRef, file);
+    const url = await getDownloadURL(fileRef);
+    return { url, path };
   };
 
   const handleSubmit = async (e) => {
@@ -135,16 +136,8 @@ export default function EditEvent() {
 
       if (deletedPhotos.length > 0) {
         for (const path of deletedPhotos) {
-          await fetch(`/api/image`, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              bucket: "bit-content-images",
-              path: path,
-            }),
-          });
+          const fileRef = ref(storage, path);
+          await deleteObject(fileRef);
         }
       }
 
@@ -152,7 +145,7 @@ export default function EditEvent() {
       if (event.banner instanceof File) {
         bannerData = await handleImageUpload(
           event.banner,
-          `content/events/event-${eventId}/banner`
+          `events/event-${eventId}/banner`
         );
       }
 
@@ -161,7 +154,7 @@ export default function EditEvent() {
         if (item.type === "image" && item.file instanceof File) {
           const uploaded = await handleImageUpload(
             item.file,
-            `content/events/event-${eventId}/${item.id}`
+            `events/event-${eventId}/${item.id}`
           );
           galleryData.push({ type: "image", ...uploaded, id: item.id });
         } else {

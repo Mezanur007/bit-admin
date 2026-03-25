@@ -6,8 +6,9 @@ const JoditEditor = dynamic(() => import("jodit-react"), {
   loading: () => <p>Loading editor...</p>,
 });
 import { nanoid } from "nanoid";
-import { db } from "@/configuration/firebase-config";
+import { db, storage } from "@/configuration/firebase-config";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { toast } from "react-toastify";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -25,7 +26,6 @@ export default function AddArticle() {
     description: { en: "", ar: "" },
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const editor = useRef(null);
 
@@ -40,13 +40,6 @@ export default function AddArticle() {
   );
 
   const handleChange = (field, value) => {
-    if (field === "slug" && value.includes("-")) {
-      setError(c("noHyphens"));
-      return;
-    } else {
-      setError("");
-    }
-
     if (["title", "description"].includes(field)) {
       setArticle((prev) => ({
         ...prev,
@@ -84,21 +77,9 @@ export default function AddArticle() {
       }
 
       const storageId = nanoid();
-
-      const formData = new FormData();
-      formData.append("file", article.image);
-      formData.append("path", storageId);
-      formData.append("bucket", "bit-blog-images");
-
-      const res = await fetch("/api/image", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) throw new Error("Image upload failed");
-
-      const data = await res.json();
-      const imageURL = data.url;
+      const imageRef = ref(storage, `articles/article-${storageId}`);
+      await uploadBytes(imageRef, article.image);
+      const imageURL = await getDownloadURL(imageRef);
 
       const articlesRef = collection(db, "articles");
       await addDoc(articlesRef, {
@@ -206,7 +187,6 @@ export default function AddArticle() {
             onChange={(e) => handleChange("slug", e.target.value)}
             required
           />
-          {error !== "" && <div className="form-text text-danger">{error}</div>}
         </div>
         <div className="mb-5">
           <label className="form-label">{t("description")}</label>

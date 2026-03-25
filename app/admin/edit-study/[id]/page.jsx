@@ -1,7 +1,13 @@
 "use client";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { db } from "@/configuration/firebase-config";
+import { db, storage } from "@/configuration/firebase-config";
+import {
+  ref,
+  getDownloadURL,
+  deleteObject,
+  uploadBytes,
+} from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { nanoid } from "nanoid";
@@ -197,15 +203,10 @@ export default function EditCaseStudy() {
   };
 
   const handleImageUpload = async (file, path) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("path", path);
-    formData.append("bucket", "bit-content-images");
-
-    const res = await fetch("/api/image", { method: "POST", body: formData });
-    if (!res.ok) throw new Error("Image upload failed");
-    const data = await res.json();
-    return { url: data.url, path };
+    const fileRef = ref(storage, path);
+    await uploadBytes(fileRef, file);
+    const url = await getDownloadURL(fileRef);
+    return { url, path };
   };
 
   const handleSubmit = async (e) => {
@@ -223,16 +224,8 @@ export default function EditCaseStudy() {
 
       if (deletedPhotos.length > 0) {
         for (const path of deletedPhotos) {
-          await fetch(`/api/image`, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              bucket: "bit-content-images",
-              path: path,
-            }),
-          });
+          const fileRef = ref(storage, path);
+          await deleteObject(fileRef);
         }
       }
 
@@ -240,7 +233,7 @@ export default function EditCaseStudy() {
       if (study.banner instanceof File) {
         bannerData = await handleImageUpload(
           study.banner,
-          `content/case-studies/study-${id}/banner`
+          `case-studies/study-${id}/banner`
         );
       }
 
@@ -249,7 +242,7 @@ export default function EditCaseStudy() {
         if (item.file instanceof File) {
           const uploaded = await handleImageUpload(
             item.file,
-            `content/case-studies/study-${id}/${item.id}`
+            `case-studies/study-${id}/${item.id}`
           );
           snaps.push({ ...uploaded, id: item.id });
         } else {

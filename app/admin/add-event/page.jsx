@@ -1,8 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { db } from "@/configuration/firebase-config";
+import { db, storage } from "@/configuration/firebase-config";
 import { doc, setDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { toast } from "react-toastify";
 import { nanoid } from "nanoid";
 import { IoMdClose } from "react-icons/io";
@@ -86,15 +87,10 @@ export default function AddEvent() {
   };
 
   const handleImageUpload = async (file, path) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("path", path);
-    formData.append("bucket", "bit-content-images");
-
-    const res = await fetch("/api/image", { method: "POST", body: formData });
-    if (!res.ok) throw new Error("Image upload failed");
-    const data = await res.json();
-    return { url: data.url, path };
+    const fileRef = ref(storage, path);
+    await uploadBytes(fileRef, file);
+    const url = await getDownloadURL(fileRef);
+    return { url, path };
   };
 
   const handleSubmit = async (e) => {
@@ -111,7 +107,7 @@ export default function AddEvent() {
       if (event.banner) {
         bannerData = await handleImageUpload(
           event.banner,
-          `content/events/event-${eventId}/banner`
+          `events/event-${eventId}/banner`
         );
       }
 
@@ -120,7 +116,7 @@ export default function AddEvent() {
         if (item.type === "image") {
           const uploaded = await handleImageUpload(
             item.file,
-            `content/events/event-${eventId}/${item.id}`
+            `events/event-${eventId}/${item.id}`
           );
           galleryData.push({ type: "image", ...uploaded, id: item.id });
         } else {

@@ -1,8 +1,9 @@
 "use client";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { useArticles } from "@/contexts/ArticlesContext";
 import { deleteDoc, doc } from "firebase/firestore";
-import { db } from "@/configuration/firebase-config";
+import { db, storage } from "@/configuration/firebase-config";
+import { ref, deleteObject } from "firebase/storage";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Pagination from "@mui/material/Pagination";
@@ -34,18 +35,8 @@ export default function Articles() {
     if (!window.confirm(c("confirmDelete"))) return;
     setDeletingIds((prev) => [...prev, article.id]);
     try {
-      const resImg = await fetch(`/api/image`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          bucket: "bit-blog-images",
-          path: article.storageId,
-        }),
-      });
-
-      if (!resImg.ok) throw new Error("Failed to delete image");
+      const imgRef = ref(storage, `articles/article-${article.storageId}`);
+      await deleteObject(imgRef);
 
       await deleteDoc(doc(db, "articles", article.id));
 
@@ -132,14 +123,6 @@ export default function Articles() {
                           className={`btn btn-primary ${
                             locale === "en" ? "me-2" : "ms-2"
                           }`}
-                          onClick={() =>
-                            router.push(
-                              `/article/${article.title["en"].replace(
-                                /\s+/g,
-                                "_"
-                              )}`
-                            )
-                          }
                           title={c("view")}
                         >
                           <FaEye />
