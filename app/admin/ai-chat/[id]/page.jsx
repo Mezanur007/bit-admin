@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, use } from "react";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
 import { db } from "@/configuration/firebase-config";
 import {
   collection,
@@ -9,7 +8,6 @@ import {
   onSnapshot,
   query,
   orderBy,
-  getDoc,
 } from "firebase/firestore";
 import useAuth from "@/hooks/UseAuth";
 import Loading from "@/components/Loading";
@@ -18,8 +16,6 @@ import SendIcon from "@mui/icons-material/Send";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 
 const STATUS_OPTIONS = ["new", "active", "waiting", "closed"];
 
@@ -40,7 +36,6 @@ export default function ConversationDetailPage({ params }) {
   const { id } = use(params);
   const { loading, user, isAdmin } = useAuth();
   const router = useRouter();
-  const locale = useLocale();
 
   const [conversation, setConversation] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -62,36 +57,28 @@ export default function ConversationDetailPage({ params }) {
   // Load conversation metadata
   useEffect(() => {
     if (!user || !isAdmin || !id) return;
-
     const unsub = onSnapshot(doc(db, "conversations", id), (snap) => {
-      if (snap.exists()) {
-        setConversation({ id: snap.id, ...snap.data() });
-      }
+      if (snap.exists()) setConversation({ id: snap.id, ...snap.data() });
     });
-
     return () => unsub();
   }, [user, isAdmin, id]);
 
   // Load messages
   useEffect(() => {
     if (!user || !isAdmin || !id) return;
-
     const q = query(
       collection(db, "conversations", id, "messages"),
       orderBy("createdAt", "asc")
     );
-
     const unsub = onSnapshot(q, (snap) => {
       setMessages(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
     });
-
     return () => unsub();
   }, [user, isAdmin, id]);
 
   // Mark as read on enter
   useEffect(() => {
     if (!user || !isAdmin || !id) return;
-
     fetch("/api/admin-chat/conversation", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -107,13 +94,16 @@ export default function ConversationDetailPage({ params }) {
   const handleSend = async () => {
     const trimmed = text.trim();
     if (!trimmed || sending) return;
-
     setSending(true);
     try {
       await fetch("/api/admin-chat/reply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ conversationId: id, text: trimmed }),
+        body: JSON.stringify({
+          conversationId: id,
+          text: trimmed,
+          adminName: user?.displayName || user?.email || "Admin",
+        }),
       });
       setText("");
     } catch (e) {
@@ -133,18 +123,15 @@ export default function ConversationDetailPage({ params }) {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     setUploading(true);
     try {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("conversationId", id);
-
       const res = await fetch("/api/admin-chat/upload", {
         method: "POST",
         body: formData,
       });
-
       const data = await res.json();
       if (data.url) {
         await fetch("/api/admin-chat/reply", {
@@ -156,6 +143,7 @@ export default function ConversationDetailPage({ params }) {
             fileUrl: data.url,
             fileName: data.fileName,
             mimeType: data.mimeType,
+            adminName: user?.displayName || user?.email || "Admin",
           }),
         });
       }
@@ -202,24 +190,33 @@ export default function ConversationDetailPage({ params }) {
   if (!user || !isAdmin) return <Loading />;
 
   const renderMessage = (msg) => {
-    const isVisitor = msg.role === "user" || msg.role === "visitor";
-    const isBot = msg.role === "bot" || msg.role === "assistant";
-    const isAdmin_ = msg.role === "admin";
+    // senderType: "visitor" | "bot" | "admin"
+    const isBot = msg.senderType === "bot";
+    const isAdminMsg = msg.senderType === "admin";
+    const msgText = msg.messageText;
 
-    const content = msg.fileUrl ? (
-      msg.mimeType?.startsWith("image/") ? (
-        <img
-          src={msg.fileUrl}
-          alt={msg.fileName || "image"}
-          style={{ maxWidth: 220, borderRadius: 8 }}
-        />
-      ) : (
-        <a href={msg.fileUrl} target="_blank" rel="noreferrer" className="text-decoration-underline">
-          📎 {msg.fileName || "Download file"}
-        </a>
-      )
-    ) : (
-      <span style={{ whiteSpace: "pre-wrap" }}>{msg.text}</span>
+    const fileContent =
+      msg.fileUrl ? (
+        msg.mimeType?.startsWith("image/") ? (
+          <img
+            src={msg.fileUrl}
+            alt={msg.fileName || "image"}
+            style={{ maxWidth: 220, borderRadius: 8 }}
+          />
+        ) : (
+          <a
+            href={msg.fileUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="text-decoration-underline"
+          >
+            📎 {msg.fileName || "Download file"}
+          </a>
+        )
+      ) : null;
+
+    const body = fileContent || (
+      <span style={{ whiteSpace: "pre-wrap" }}>{msgText}</span>
     );
 
     if (isBot) {
@@ -238,7 +235,7 @@ export default function ConversationDetailPage({ params }) {
             <SmartToyOutlinedIcon
               style={{ fontSize: 14, marginRight: 4, verticalAlign: "middle" }}
             />
-            {content}
+            {body}
             <div className="text-muted" style={{ fontSize: 11, marginTop: 2 }}>
               {timeLabel(msg.createdAt)}
             </div>
@@ -247,21 +244,24 @@ export default function ConversationDetailPage({ params }) {
       );
     }
 
-    if (isAdmin_) {
+    if (isAdminMsg) {
       return (
         <div key={msg.id} className="d-flex justify-content-start mb-3">
           <div
             className="px-3 py-2 rounded border"
-            style={{
-              background: "#fff",
-              maxWidth: "70%",
-              fontSize: 14,
-            }}
+            style={{ background: "#fff", maxWidth: "70%", fontSize: 14 }}
           >
-            <div style={{ fontSize: 11, color: "#6c63ff", marginBottom: 2, fontWeight: 600 }}>
-              Admin
+            <div
+              style={{
+                fontSize: 11,
+                color: "#6c63ff",
+                marginBottom: 2,
+                fontWeight: 600,
+              }}
+            >
+              {msg.senderName || "Admin"}
             </div>
-            {content}
+            {body}
             <div className="text-muted" style={{ fontSize: 11, marginTop: 2 }}>
               {timeLabel(msg.createdAt)}
             </div>
@@ -270,7 +270,7 @@ export default function ConversationDetailPage({ params }) {
       );
     }
 
-    // Visitor — right aligned
+    // Visitor — right aligned, brand gradient
     return (
       <div key={msg.id} className="d-flex justify-content-end mb-3">
         <div
@@ -281,7 +281,7 @@ export default function ConversationDetailPage({ params }) {
             fontSize: 14,
           }}
         >
-          {content}
+          {body}
           <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>
             {timeLabel(msg.createdAt)}
           </div>
@@ -315,8 +315,7 @@ export default function ConversationDetailPage({ params }) {
             className="badge ms-2"
             style={{
               background: STATUS_COLORS[conversation.status] || "#ccc",
-              color:
-                conversation.status === "waiting" ? "#000" : "#fff",
+              color: conversation.status === "waiting" ? "#000" : "#fff",
             }}
           >
             {conversation.status}
@@ -330,11 +329,7 @@ export default function ConversationDetailPage({ params }) {
           className="flex-grow-1 d-flex flex-column border rounded bg-white"
           style={{ overflow: "hidden" }}
         >
-          {/* Scrollable messages */}
-          <div
-            className="p-3 flex-grow-1"
-            style={{ overflowY: "auto" }}
-          >
+          <div className="p-3 flex-grow-1" style={{ overflowY: "auto" }}>
             {messages.length === 0 && (
               <div className="text-muted text-center py-5">
                 No messages yet.
@@ -349,7 +344,7 @@ export default function ConversationDetailPage({ params }) {
             <textarea
               className="form-control"
               rows={2}
-              placeholder="Type a reply…"
+              placeholder="Type a reply… (Enter to send, Shift+Enter for newline)"
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -369,10 +364,7 @@ export default function ConversationDetailPage({ params }) {
               title="Attach file"
             >
               {uploading ? (
-                <span
-                  className="spinner-border spinner-border-sm"
-                  role="status"
-                />
+                <span className="spinner-border spinner-border-sm" role="status" />
               ) : (
                 <AttachFileIcon style={{ fontSize: 20 }} />
               )}
@@ -384,10 +376,7 @@ export default function ConversationDetailPage({ params }) {
               disabled={sending || !text.trim()}
             >
               {sending ? (
-                <span
-                  className="spinner-border spinner-border-sm"
-                  role="status"
-                />
+                <span className="spinner-border spinner-border-sm" role="status" />
               ) : (
                 <SendIcon style={{ fontSize: 20 }} />
               )}
@@ -400,7 +389,6 @@ export default function ConversationDetailPage({ params }) {
           className="border rounded bg-white p-3 d-flex flex-column gap-3"
           style={{ width: 260, flexShrink: 0, overflowY: "auto" }}
         >
-          {/* Visitor info */}
           <div>
             <h6 className="fw-bold mb-2">Visitor Info</h6>
             <div className="d-flex flex-column gap-1 small">
@@ -419,15 +407,12 @@ export default function ConversationDetailPage({ params }) {
               {conversation?.locale && (
                 <div>
                   <span className="text-muted">Locale: </span>
-                  <span className="badge bg-secondary">
-                    {conversation.locale}
-                  </span>
+                  <span className="badge bg-secondary">{conversation.locale}</span>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Status selector */}
           <div>
             <h6 className="fw-bold mb-2">Status</h6>
             <select
@@ -444,19 +429,18 @@ export default function ConversationDetailPage({ params }) {
             </select>
           </div>
 
-          {/* Delete */}
           <div className="mt-auto">
             {deleteConfirm ? (
               <div className="d-flex flex-column gap-2">
                 <div className="small text-danger">
-                  Are you sure? This will hide the conversation.
+                  This will hide the conversation from the list.
                 </div>
                 <div className="d-flex gap-2">
                   <button
                     className="btn btn-danger btn-sm flex-grow-1"
                     onClick={handleDelete}
                   >
-                    Delete
+                    Confirm
                   </button>
                   <button
                     className="btn btn-outline-secondary btn-sm"

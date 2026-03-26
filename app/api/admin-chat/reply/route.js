@@ -4,7 +4,7 @@ import admin from "firebase-admin";
 
 export async function POST(req) {
   try {
-    const { conversationId, text, fileUrl, fileName, mimeType } =
+    const { conversationId, text, fileUrl, fileName, mimeType, adminName } =
       await req.json();
 
     if (!conversationId || (!text && !fileUrl)) {
@@ -14,17 +14,22 @@ export async function POST(req) {
       );
     }
 
+    const messageType = fileUrl
+      ? mimeType?.startsWith("image/")
+        ? "image"
+        : "document"
+      : "text";
+
     const message = {
-      role: "admin",
-      text: text || "",
+      senderType: "admin",
+      senderName: adminName || "Admin",
+      messageType,
+      messageText: text || null,
+      fileUrl: fileUrl || null,
+      fileName: fileName || null,
+      mimeType: mimeType || null,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     };
-
-    if (fileUrl) {
-      message.fileUrl = fileUrl;
-      message.fileName = fileName || "file";
-      message.mimeType = mimeType || "application/octet-stream";
-    }
 
     await db
       .collection("conversations")
@@ -33,8 +38,8 @@ export async function POST(req) {
       .add(message);
 
     const preview = text
-      ? text.slice(0, 80)
-      : `📎 ${fileName || "file"}`;
+      ? `[Admin] ${text.slice(0, 80)}`
+      : `[Admin] 📎 ${fileName || "file"}`;
 
     await db.collection("conversations").doc(conversationId).update({
       lastMessageAt: admin.firestore.FieldValue.serverTimestamp(),

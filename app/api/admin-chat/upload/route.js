@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
-import { s3 } from "@/configuration/aws";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import admin from "firebase-admin";
+import "@/configuration/firebase-admin"; // ensure admin is initialized
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
-const BUCKET = "bit-admin-chat";
 
 export async function POST(req) {
   try {
@@ -26,23 +25,26 @@ export async function POST(req) {
       );
     }
 
+    const buffer = Buffer.from(arrayBuffer);
     const ext = file.name.split(".").pop();
-    const uniqueName = `${Date.now()}-${Math.random()
-      .toString(36)
-      .slice(2)}.${ext}`;
-    const key = `chat-uploads/${conversationId}/${uniqueName}`;
+    const uniqueName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const filePath = `chat-uploads/${conversationId}/${uniqueName}`;
 
-    await s3.send(
-      new PutObjectCommand({
-        Bucket: BUCKET,
-        Key: key,
-        Body: Buffer.from(arrayBuffer),
-        ContentType: file.type || "application/octet-stream",
-        ACL: "public-read",
-      })
-    );
+    // Use the storage bucket from env (strip gs:// prefix if present)
+    const bucketName = (
+      process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || ""
+    ).replace("gs://", "");
 
-    const url = `https://${BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+    const bucket = admin.storage().bucket(bucketName);
+    const fileRef = bucket.file(filePath);
+
+    await fileRef.save(buffer, {
+      metadata: { contentType: file.type || "application/octet-stream" },
+    });
+
+    await fileRef.makePublic();
+
+    const url = `https://storage.googleapis.com/${bucketName}/${filePath}`;
 
     return NextResponse.json({
       url,
