@@ -24,6 +24,7 @@ import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import Loading from "@/components/Loading";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
+import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
 
 export default function AdminAccount({ children }) {
   const locale = useLocale();
@@ -92,6 +93,11 @@ export default function AdminAccount({ children }) {
       key: "metadata",
       url: "/admin/seo-metadata",
       icon: <ManageSearchIcon />,
+    },
+    {
+      key: "aiChat",
+      url: "/admin/ai-chat",
+      icon: <SmartToyOutlinedIcon />,
     },
   ];
 

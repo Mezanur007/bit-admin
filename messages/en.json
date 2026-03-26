@@ -26,7 +26,8 @@
     "password": "Password",
     "email": "Email",
     "signOut": "Sign Out",
-    "metadata":"Meta Data"
+    "metadata":"Meta Data",
+    "aiChat": "AI Chat"
   },
   "articlesPage": {
     "pageTitle": "Articles",
