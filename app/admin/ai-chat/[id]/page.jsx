@@ -32,6 +32,42 @@ function timeLabel(ts) {
   return d.toLocaleString();
 }
 
+function extractLeadMetadata(messages) {
+  const metadata = {
+    contact: "",
+    brief: "",
+    preferredMeetingSlot: "",
+  };
+
+  for (const message of messages) {
+    if (message?.senderType !== "visitor" || typeof message?.messageText !== "string") {
+      continue;
+    }
+
+    const text = message.messageText.trim();
+
+    if (!metadata.contact && text.startsWith("Contact details:")) {
+      const contactLine = text.slice("Contact details:".length).trim();
+      const [, contact = ""] = contactLine.split("|").map((part) => part.trim());
+      metadata.contact = contact || contactLine;
+      continue;
+    }
+
+    if (!metadata.brief && text.startsWith("Project brief:")) {
+      metadata.brief = text.slice("Project brief:".length).trim();
+      continue;
+    }
+
+    if (!metadata.preferredMeetingSlot && text.startsWith("Preferred meeting slot:")) {
+      metadata.preferredMeetingSlot = text
+        .slice("Preferred meeting slot:".length)
+        .trim();
+    }
+  }
+
+  return metadata;
+}
+
 export default function ConversationDetailPage({ params }) {
   const { id } = use(params);
   const { loading, user, isAdmin } = useAuth();
@@ -52,31 +88,30 @@ export default function ConversationDetailPage({ params }) {
     if (!loading && (!user || !isAdmin)) {
       router.push("/login");
     }
-  }, [loading, user, isAdmin]);
+  }, [loading, user, isAdmin, router]);
 
-  // Load conversation metadata
   useEffect(() => {
     if (!user || !isAdmin || !id) return;
     const unsub = onSnapshot(doc(db, "conversations", id), (snap) => {
-      if (snap.exists()) setConversation({ id: snap.id, ...snap.data() });
+      if (snap.exists()) {
+        setConversation({ id: snap.id, ...snap.data() });
+      }
     });
     return () => unsub();
   }, [user, isAdmin, id]);
 
-  // Load messages
   useEffect(() => {
     if (!user || !isAdmin || !id) return;
-    const q = query(
+    const messagesQuery = query(
       collection(db, "conversations", id, "messages"),
       orderBy("createdAt", "asc")
     );
-    const unsub = onSnapshot(q, (snap) => {
-      setMessages(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    const unsub = onSnapshot(messagesQuery, (snap) => {
+      setMessages(snap.docs.map((docSnapshot) => ({ id: docSnapshot.id, ...docSnapshot.data() })));
     });
     return () => unsub();
   }, [user, isAdmin, id]);
 
-  // Mark as read on enter
   useEffect(() => {
     if (!user || !isAdmin || !id) return;
     fetch("/api/admin-chat/conversation", {
@@ -86,7 +121,6 @@ export default function ConversationDetailPage({ params }) {
     });
   }, [id, user, isAdmin]);
 
-  // Auto-scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -106,33 +140,36 @@ export default function ConversationDetailPage({ params }) {
         }),
       });
       setText("");
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
     } finally {
       setSending(false);
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
       handleSend();
     }
   };
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
     if (!file) return;
+
     setUploading(true);
     try {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("conversationId", id);
+
       const res = await fetch("/api/admin-chat/upload", {
         method: "POST",
         body: formData,
       });
       const data = await res.json();
+
       if (data.url) {
         await fetch("/api/admin-chat/reply", {
           method: "POST",
@@ -147,11 +184,11 @@ export default function ConversationDetailPage({ params }) {
           }),
         });
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
     } finally {
       setUploading(false);
-      e.target.value = "";
+      event.target.value = "";
     }
   };
 
@@ -166,8 +203,8 @@ export default function ConversationDetailPage({ params }) {
           updates: { status: newStatus },
         }),
       });
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
     } finally {
       setStatusChanging(false);
     }
@@ -181,39 +218,44 @@ export default function ConversationDetailPage({ params }) {
         body: JSON.stringify({ conversationId: id }),
       });
       router.push("/admin/ai-chat");
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
     }
   };
 
   if (loading) return <Loading />;
   if (!user || !isAdmin) return <Loading />;
 
+  const leadMetadata = extractLeadMetadata(messages);
+  const contactValue =
+    conversation?.visitorEmail ||
+    conversation?.visitorMobile ||
+    leadMetadata.contact ||
+    "-";
+
   const renderMessage = (msg) => {
-    // senderType: "visitor" | "bot" | "admin"
     const isBot = msg.senderType === "bot";
     const isAdminMsg = msg.senderType === "admin";
     const msgText = msg.messageText;
 
-    const fileContent =
-      msg.fileUrl ? (
-        msg.mimeType?.startsWith("image/") ? (
-          <img
-            src={msg.fileUrl}
-            alt={msg.fileName || "image"}
-            style={{ maxWidth: 220, borderRadius: 8 }}
-          />
-        ) : (
-          <a
-            href={msg.fileUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="text-decoration-underline"
-          >
-            📎 {msg.fileName || "Download file"}
-          </a>
-        )
-      ) : null;
+    const fileContent = msg.fileUrl ? (
+      msg.mimeType?.startsWith("image/") ? (
+        <img
+          src={msg.fileUrl}
+          alt={msg.fileName || "image"}
+          style={{ maxWidth: 220, borderRadius: 8 }}
+        />
+      ) : (
+        <a
+          href={msg.fileUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="text-decoration-underline"
+        >
+          Attachment: {msg.fileName || "Download file"}
+        </a>
+      )
+    ) : null;
 
     const body = fileContent || (
       <span style={{ whiteSpace: "pre-wrap" }}>{msgText}</span>
@@ -270,7 +312,6 @@ export default function ConversationDetailPage({ params }) {
       );
     }
 
-    // Visitor — right aligned, brand gradient
     return (
       <div key={msg.id} className="d-flex justify-content-end mb-3">
         <div
@@ -299,7 +340,6 @@ export default function ConversationDetailPage({ params }) {
         height: "100vh",
       }}
     >
-      {/* Back header */}
       <div className="d-flex align-items-center gap-2 mb-3">
         <button
           className="btn btn-light btn-sm"
@@ -307,9 +347,7 @@ export default function ConversationDetailPage({ params }) {
         >
           <ArrowBackIcon style={{ fontSize: 18 }} />
         </button>
-        <h5 className="mb-0 fw-bold">
-          {conversation?.visitorName || "Chat"}
-        </h5>
+        <h5 className="mb-0 fw-bold">{conversation?.visitorName || "Chat"}</h5>
         {conversation?.status && (
           <span
             className="badge ms-2"
@@ -324,29 +362,25 @@ export default function ConversationDetailPage({ params }) {
       </div>
 
       <div className="d-flex gap-3 flex-grow-1" style={{ overflow: "hidden" }}>
-        {/* Messages panel */}
         <div
           className="flex-grow-1 d-flex flex-column border rounded bg-white"
           style={{ overflow: "hidden" }}
         >
           <div className="p-3 flex-grow-1" style={{ overflowY: "auto" }}>
             {messages.length === 0 && (
-              <div className="text-muted text-center py-5">
-                No messages yet.
-              </div>
+              <div className="text-muted text-center py-5">No messages yet.</div>
             )}
             {messages.map(renderMessage)}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Compose bar */}
           <div className="border-top p-2 d-flex align-items-end gap-2">
             <textarea
               className="form-control"
               rows={2}
-              placeholder="Type a reply… (Enter to send, Shift+Enter for newline)"
+              placeholder="Type a reply... (Enter to send, Shift+Enter for newline)"
               value={text}
-              onChange={(e) => setText(e.target.value)}
+              onChange={(event) => setText(event.target.value)}
               onKeyDown={handleKeyDown}
               style={{ resize: "none", fontSize: 14 }}
               disabled={sending}
@@ -384,7 +418,6 @@ export default function ConversationDetailPage({ params }) {
           </div>
         </div>
 
-        {/* Sidebar */}
         <div
           className="border rounded bg-white p-3 d-flex flex-column gap-3"
           style={{ width: 260, flexShrink: 0, overflowY: "auto" }}
@@ -394,15 +427,19 @@ export default function ConversationDetailPage({ params }) {
             <div className="d-flex flex-column gap-1 small">
               <div>
                 <span className="text-muted">Name: </span>
-                {conversation?.visitorName || "—"}
+                {conversation?.visitorName || "-"}
               </div>
               <div>
                 <span className="text-muted">Email: </span>
-                {conversation?.visitorEmail || "—"}
+                {conversation?.visitorEmail || "-"}
               </div>
               <div>
                 <span className="text-muted">Mobile: </span>
-                {conversation?.visitorMobile || "—"}
+                {conversation?.visitorMobile || "-"}
+              </div>
+              <div>
+                <span className="text-muted">Best Contact: </span>
+                {contactValue}
               </div>
               {conversation?.locale && (
                 <div>
@@ -413,17 +450,37 @@ export default function ConversationDetailPage({ params }) {
             </div>
           </div>
 
+          {(leadMetadata.preferredMeetingSlot || leadMetadata.brief) && (
+            <div>
+              <h6 className="fw-bold mb-2">Booking Details</h6>
+              <div className="d-flex flex-column gap-2 small">
+                {leadMetadata.preferredMeetingSlot && (
+                  <div>
+                    <div className="text-muted">Preferred Meeting Slot</div>
+                    <div>{leadMetadata.preferredMeetingSlot}</div>
+                  </div>
+                )}
+                {leadMetadata.brief && (
+                  <div>
+                    <div className="text-muted">Project Brief</div>
+                    <div style={{ whiteSpace: "pre-wrap" }}>{leadMetadata.brief}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           <div>
             <h6 className="fw-bold mb-2">Status</h6>
             <select
               className="form-select form-select-sm"
               value={conversation?.status || "new"}
-              onChange={(e) => handleStatusChange(e.target.value)}
+              onChange={(event) => handleStatusChange(event.target.value)}
               disabled={statusChanging}
             >
-              {STATUS_OPTIONS.map((s) => (
-                <option key={s} value={s}>
-                  {s.charAt(0).toUpperCase() + s.slice(1)}
+              {STATUS_OPTIONS.map((status) => (
+                <option key={status} value={status}>
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
                 </option>
               ))}
             </select>
