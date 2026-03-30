@@ -40,7 +40,10 @@ function extractLeadMetadata(messages) {
   };
 
   for (const message of messages) {
-    if (message?.senderType !== "visitor" || typeof message?.messageText !== "string") {
+    if (
+      (message?.senderType !== "visitor" && message?.senderType !== "bot") ||
+      typeof message?.messageText !== "string"
+    ) {
       continue;
     }
 
@@ -62,6 +65,27 @@ function extractLeadMetadata(messages) {
       metadata.preferredMeetingSlot = text
         .slice("Preferred meeting slot:".length)
         .trim();
+    }
+
+    if (message.senderType !== "bot") {
+      continue;
+    }
+
+    const lines = text.split("\n").map((line) => line.trim()).filter(Boolean);
+    for (const line of lines) {
+      if (!metadata.contact && (line.startsWith("Email:") || line.startsWith("Mobile:"))) {
+        metadata.contact = line.slice(line.indexOf(":") + 1).trim();
+        continue;
+      }
+
+      if (!metadata.preferredMeetingSlot && line.startsWith("Date:")) {
+        metadata.preferredMeetingSlot = line.slice("Date:".length).trim();
+        continue;
+      }
+
+      if (!metadata.brief && line.startsWith("Brief:")) {
+        metadata.brief = line.slice("Brief:".length).trim();
+      }
     }
   }
 
